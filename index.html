@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MiniBank - Bankverwaltung</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,7 +15,6 @@
             align-items: center;
             padding: 20px;
         }
-
         .container {
             background: white;
             border-radius: 15px;
@@ -29,58 +23,25 @@
             max-width: 500px;
             overflow: hidden;
         }
-
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 30px;
             text-align: center;
         }
-
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 5px;
-        }
-
-        .content {
-            padding: 30px;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-
-        .login-view, .user-view, .admin-view {
-            display: none;
-        }
-
-        .login-view.active, .user-view.active, .admin-view.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        input, select {
+        .content { padding: 30px; }
+        .login-view, .user-view, .admin-view { display: none; }
+        .login-view.active, .user-view.active, .admin-view.active { display: block; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+        input {
             width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 16px;
-            transition: border-color 0.3s;
+            margin-bottom: 10px;
         }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
         button {
             width: 100%;
             padding: 12px;
@@ -91,18 +52,8 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
             margin-bottom: 10px;
         }
-
-        button:hover {
-            transform: translateY(-2px);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
         .info-box {
             background: #f0f4ff;
             border-left: 4px solid #667eea;
@@ -111,166 +62,37 @@
             margin-bottom: 20px;
             font-size: 14px;
         }
-
         .account-info {
             background: #f9f9f9;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
             border: 2px solid #e0e0e0;
+            text-align: center;
         }
-
-        .account-info p {
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        .amount {
-            font-weight: 700;
-            color: #667eea;
-            font-size: 24px;
-        }
-
+        .amount { font-weight: 700; color: #667eea; font-size: 24px; }
         .interest-table {
             width: 100%;
             font-size: 13px;
             margin-bottom: 20px;
             border-collapse: collapse;
         }
-
-        .interest-table tr {
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .interest-table td {
-            padding: 10px;
-        }
-
-        .status {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .status.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .status.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .status.pending {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-
-        .settings-section {
+        .interest-table td { padding: 10px; border-bottom: 1px solid #eee; }
+        .status { padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 600; }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .status.pending { background: #fff3cd; color: #856404; }
+        .btn-secondary { background: #6c757d; }
+        .logout-btn { background: #dc3545; }
+        .admin-section {
             background: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .settings-section h3 {
-            margin-bottom: 15px;
-            color: #333;
-            font-size: 16px;
-        }
-
-        .admin-requests {
-            background: #fff3cd;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
+            border: 1px solid #ddd;
         }
-
-        .request-item {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border-left: 4px solid #ffc107;
-        }
-
-        .request-item p {
-            margin: 8px 0;
-            font-size: 14px;
-        }
-
-        .btn-approve {
-            background: #28a745;
-            display: inline-block;
-            width: calc(50% - 5px);
-            margin-right: 10px;
-        }
-
-        .btn-reject {
-            background: #dc3545;
-            display: inline-block;
-            width: calc(50% - 5px);
-        }
-
-        .logout-btn {
-            background: #dc3545;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            flex: 1;
-            min-width: 100px;
-            padding: 10px;
-            background: #e0e0e0;
-            color: #333;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
+        .hidden { display: none; }
+        hr { margin: 20px 0; border: 0; border-top: 1px solid #eee; }
     </style>
 </head>
 <body>
@@ -282,155 +104,84 @@
     </div>
 
     <div class="content">
-        <!-- LOGIN VIEW -->
+        <!-- LOGIN -->
         <div class="login-view active">
             <h2>Anmelden</h2>
-            <div class="form-group" style="margin-top: 25px;">
-                <label for="pinInput">PIN eingeben:</label>
-                <input type="password" id="pinInput" placeholder="PIN eingeben" onkeypress="if(event.key==='Enter') login()">
+            <div class="form-group" style="margin-top: 20px;">
+                <label>PIN eingeben:</label>
+                <input type="password" id="pinInput" placeholder="####">
+                <button onclick="login()">Anmelden</button>
             </div>
-            <button onclick="login()">Anmelden</button>
-            <div class="info-box" style="margin-top: 20px;">
-                📌 Demo-PIN für Nutzer: <strong>123456</strong>
+            <div class="info-box">
+                📌 Nutzer-PIN zum Testen: 123456
             </div>
         </div>
 
-        <!-- USER VIEW -->
+        <!-- USER -->
         <div class="user-view">
-            <h2>Willkommen!</h2>
-
             <div class="account-info">
-                <p>💰 Kontostand:</p>
+                <p>Mein Kontostand</p>
                 <p class="amount" id="userBalance">0.00 €</p>
-                <p style="margin-top: 10px; color: #666;">
-                    💳 Kredit-Limit: <span id="userCreditLimit">0.00 €</span>
-                </p>
             </div>
 
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('overview')">Übersicht</button>
-                <button class="tab-btn" onclick="switchTab('transfer')">Überweisen</button>
-                <button class="tab-btn" onclick="switchTab('credit')">Kredit</button>
-            </div>
+            <div id="userStatus" class="hidden"></div>
+            <div id="contractStatus" class="hidden"></div>
 
-            <!-- ÜBERSICHT TAB -->
-            <div id="overview" class="tab-content active">
-                <div class="info-box">
-                    <strong>Zinssätze (automatisch):</strong>
-                </div>
-
+            <div class="info-box">
+                <strong>Zinssätze:</strong>
                 <table class="interest-table">
-                    <tr>
-                        <td><strong>Betrag</strong></td>
-                        <td><strong>Zinssatz</strong></td>
-                    </tr>
-                    <tr>
-                        <td>1¢ - 5€</td>
-                        <td id="rate1">3¢</td>
-                    </tr>
-                    <tr>
-                        <td>5€ - 100€</td>
-                        <td id="rate2">15¢</td>
-                    </tr>
-                    <tr>
-                        <td>Über 100€</td>
-                        <td>Sondervertrag</td>
-                    </tr>
+                    <tr><td>1ct - 5€</td><td id="rate1Disp">0.03€</td></tr>
+                    <tr><td>5€ - 100€</td><td id="rate2Disp">0.15€</td></tr>
+                    <tr><td>Über 100€</td><td>Sondervertrag</td></tr>
                 </table>
-
-                <div class="form-group">
-                    <label for="userDeposit">Geld einzahlen (€):</label>
-                    <input type="number" id="userDeposit" placeholder="Betrag eingeben" step="0.01" min="0">
-                    <button onclick="deposit()">Einzahlen</button>
-                </div>
-
-                <div id="userStatus" class="hidden"></div>
-                <div id="contractStatus" class="hidden"></div>
-
-                <button class="btn-secondary" onclick="calculateInterest()">💹 Zinsen berechnen</button>
             </div>
 
-            <!-- ÜBERWEISEN TAB -->
-            <div id="transfer" class="tab-content">
-                <div class="form-group">
-                    <label for="recipientId">Empfänger-ID:</label>
-                    <input type="number" id="recipientId" placeholder="ID eingeben" min="1">
-                </div>
-                <div class="form-group">
-                    <label for="transferAmount">Betrag (€):</label>
-                    <input type="number" id="transferAmount" placeholder="Betrag eingeben" step="0.01" min="0">
-                </div>
-                <button onclick="transfer()">Überweisen</button>
-                <div id="transferStatus" class="hidden"></div>
+            <div class="form-group">
+                <label>💰 Einzahlen / Kredit aufnehmen:</label>
+                <input type="number" id="amountInput" step="0.01" placeholder="Betrag in €">
+                <button onclick="deposit()">Einzahlen</button>
+                <button class="btn-secondary" onclick="takeLoan()">Kredit aufnehmen</button>
             </div>
 
-            <!-- KREDIT TAB -->
-            <div id="credit" class="tab-content">
-                <div class="account-info">
-                    <p>📊 Kredit-Informationen:</p>
-                    <p>Verfügbares Limit: <strong id="availableCredit">0.00 €</strong></p>
-                    <p>Verwendeter Kredit: <strong id="usedCredit">0.00 €</strong></p>
-                </div>
+            <hr>
 
-                <div class="form-group">
-                    <label for="creditAmount">Kredit aufnehmen (€):</label>
-                    <input type="number" id="creditAmount" placeholder="Betrag eingeben" step="0.01" min="0">
-                </div>
-                <button onclick="requestCredit()">Kredit beantragen</button>
-                <div id="creditStatus" class="hidden"></div>
+            <div class="form-group">
+                <label>💸 Überweisen:</label>
+                <input type="password" id="targetPin" placeholder="PIN des Empfängers">
+                <input type="number" id="transferAmount" step="0.01" placeholder="Betrag in €">
+                <button onclick="transfer()">Geld senden</button>
             </div>
 
+            <hr>
+
+            <button onclick="calculateInterest()">💹 Zinsen gutschreiben</button>
             <button class="logout-btn" onclick="logout()">Abmelden</button>
         </div>
 
-        <!-- ADMIN VIEW -->
+        <!-- ADMIN -->
         <div class="admin-view">
             <h2>Admin-Panel</h2>
-
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchAdminTab('settings')">Einstellungen</button>
-                <button class="tab-btn" onclick="switchAdminTab('requests')">Anfragen</button>
-                <button class="tab-btn" onclick="switchAdminTab('users')">Nutzer</button>
+            
+            <div class="admin-section">
+                <h3>⚙️ Zinsen anpassen</h3>
+                <label>Rate 1 (bis 5€):</label>
+                <input type="number" id="adminRate1" step="0.01">
+                <label>Rate 2 (bis 100€):</label>
+                <input type="number" id="adminRate2" step="0.01">
+                <button onclick="updateRates()">Speichern</button>
             </div>
 
-            <!-- SETTINGS TAB -->
-            <div id="settings" class="tab-content active">
-                <div class="settings-section">
-                    <h3>⚙️ Zinsätze ändern</h3>
-                    <div class="form-group">
-                        <label for="adminRate1">Zinssatz für 1¢ - 5€ (€):</label>
-                        <input type="number" id="adminRate1" step="0.01" min="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="adminRate2">Zinssatz für 5€ - 100€ (€):</label>
-                        <input type="number" id="adminRate2" step="0.01" min="0">
-                    </div>
-                    <button onclick="updateRates()">Zinssätze speichern</button>
-                </div>
-
-                <div class="settings-section">
-                    <h3>🔐 PIN ändern</h3>
-                    <div class="form-group">
-                        <label for="newPin">Neue Admin-PIN:</label>
-                        <input type="password" id="newPin" placeholder="Neue PIN eingeben">
-                    </div>
-                    <button onclick="changeAdminPin()">PIN ändern</button>
-                </div>
-
-                <div id="adminStatus" class="hidden"></div>
+            <div class="admin-section">
+                <h3>🔐 System-PIN</h3>
+                <input type="password" id="newPin" placeholder="Neue Admin-PIN">
+                <button onclick="changeAdminPin()">PIN ändern</button>
             </div>
 
-            <!-- REQUESTS TAB -->
-            <div id="requests" class="tab-content">
-                <h3>📋 Anfragen</h3>
-                <div id="contractRequests"></div>
-                <div id="creditRequests"></div>
-            </div>
-
-            <!-- USERS TAB -->
-            <div id="users" class="tab-content">
-                <h3>👥 Nutzer-Übersicht</h3>
-                <div id="usersList"></div>
+            <div id="adminStatus" class="hidden"></div>
+            
+            <div id="contractSection" class="admin-section hidden">
+                <h3>📋 Sonderverträge</h3>
+                <div id="requestList"></div>
             </div>
 
             <button class="logout-btn" onclick="logout()">Abmelden</button>
@@ -439,34 +190,167 @@
 </div>
 
 <script>
-    window.addEventListener('load', function() {
-        initializeApp();
-    });
-
     let currentUser = null;
-    let isAdmin = false;
 
     function initializeApp() {
-        let data = localStorage.getItem('bankData');
-        if (!data) {
+        if (!localStorage.getItem('bankData')) {
             const defaultData = {
                 users: [
-                    { id: 1, pin: '123456', balance: 50.00, credit: 0, contractStatus: 'none' },
-                    { id: 2, pin: '123457', balance: 75.50, credit: 0, contractStatus: 'none' },
-                    { id: 3, pin: '111111', balance: 150.00, credit: 0, contractStatus: 'pending' }
+                    { id: 1, pin: '123456', balance: 10.00, contractStatus: 'none' },
+                    { id: 2, pin: '123457', balance: 0.00, contractStatus: 'none' }
                 ],
-                adminPin: btoa('506715'),
+                adminPin: '506715',
                 rate1: 0.03,
                 rate2: 0.15,
-                contractRequests: [],
-                creditRequests: []
+                requests: []
             };
             localStorage.setItem('bankData', JSON.stringify(defaultData));
         }
     }
 
-    function getAppData() {
-        return JSON.parse(localStorage.getItem('bankData'));
+    function getData() { return JSON.parse(localStorage.getItem('bankData')); }
+    function saveData(data) { localStorage.setItem('bankData', JSON.stringify(data)); }
+
+    function login() {
+        const pin = document.getElementById('pinInput').value;
+        const data = getData();
+
+        if (pin === data.adminPin) {
+            showView('admin-view');
+            document.getElementById('userRole').textContent = '🔒 Administrator';
+            updateAdminDisplay();
+            return;
+        }
+
+        const user = data.users.find(u => u.pin === pin);
+        if (user) {
+            currentUser = user;
+            showView('user-view');
+            document.getElementById('userRole').textContent = '👤 Kunde';
+            updateUserDisplay();
+            return;
+        }
+        alert('PIN falsch!');
     }
 
-    function saveAppData(
+    function showView(viewId) {
+        document.querySelectorAll('.login-view, .user-view, .admin-view').forEach(v => v.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+    }
+
+    function logout() {
+        currentUser = null;
+        document.getElementById('userRole').textContent = '';
+        document.getElementById('pinInput').value = '';
+        showView('login-view');
+    }
+
+    function updateUserDisplay() {
+        const data = getData();
+        const user = data.users.find(u => u.pin === currentUser.pin);
+        document.getElementById('userBalance').textContent = user.balance.toFixed(2) + ' €';
+        document.getElementById('rate1Disp').textContent = data.rate1.toFixed(2) + ' €';
+        document.getElementById('rate2Disp').textContent = data.rate2.toFixed(2) + ' €';
+        
+        const cStatus = document.getElementById('contractStatus');
+        cStatus.classList.add('hidden');
+        
+        if (user.balance > 100 && user.contractStatus === 'none') {
+            cStatus.classList.remove('hidden');
+            cStatus.innerHTML = '<div class="status pending">⚠️ Kontostand > 100€. Bitte Sondervertrag anfordern.</div>';
+        } else if (user.contractStatus === 'pending') {
+            cStatus.classList.remove('hidden');
+            cStatus.innerHTML = '<div class="status pending">⏳ Antrag beim Admin in Prüfung...</div>';
+        } else if (user.contractStatus === 'approved') {
+            cStatus.classList.remove('hidden');
+            cStatus.innerHTML = '<div class="status success">✅ Sondervertrag aktiv.</div>';
+        }
+    }
+
+    function deposit() {
+        const amt = parseFloat(document.getElementById('amountInput').value);
+        if (isNaN(amt) || amt <= 0) return alert('Ungültiger Betrag');
+        
+        const data = getData();
+        const user = data.users.find(u => u.pin === currentUser.pin);
+        user.balance += amt;
+        saveData(data);
+        updateUserDisplay();
+        document.getElementById('amountInput').value = '';
+    }
+
+    function takeLoan() {
+        const amt = parseFloat(document.getElementById('amountInput').value);
+        if (isNaN(amt) || amt <= 0) return alert('Ungültiger Betrag');
+        
+        const data = getData();
+        const user = data.users.find(u => u.pin === currentUser.pin);
+        user.balance += amt; // Einfacher Kredit ohne Zinsen
+        saveData(data);
+        updateUserDisplay();
+        document.getElementById('amountInput').value = '';
+        alert('Kredit wurde gutgeschrieben!');
+    }
+
+    function transfer() {
+        const targetPin = document.getElementById('targetPin').value;
+        const amt = parseFloat(document.getElementById('transferAmount').value);
+        
+        if (isNaN(amt) || amt <= 0) return alert('Betrag ungültig');
+        
+        const data = getData();
+        const sender = data.users.find(u => u.pin === currentUser.pin);
+        const receiver = data.users.find(u => u.pin === targetPin);
+        
+        if (!receiver) return alert('Empfänger nicht gefunden!');
+        if (sender.balance < amt) return alert('Nicht genug Geld!');
+        
+        sender.balance -= amt;
+        receiver.balance += amt;
+        saveData(data);
+        updateUserDisplay();
+        document.getElementById('transferAmount').value = '';
+        document.getElementById('targetPin').value = '';
+        alert('Überweisung erfolgreich!');
+    }
+
+    function calculateInterest() {
+        const data = getData();
+        const user = data.users.find(u => u.pin === currentUser.pin);
+        let interest = 0;
+
+        if (user.balance > 0 && user.balance <= 5) interest = data.rate1;
+        else if (user.balance > 5 && user.balance <= 100) interest = data.rate2;
+        else if (user.balance > 100 && user.contractStatus === 'approved') interest = 0.50; // Festbetrag Sondervertrag
+        else if (user.balance > 100 && user.contractStatus !== 'approved') {
+            return alert('Kein Sondervertrag für Beträge über 100€ vorhanden!');
+        }
+
+        user.balance += interest;
+        saveData(data);
+        updateUserDisplay();
+        alert('Zinsen in Höhe von ' + interest.toFixed(2) + '€ gutgeschrieben!');
+    }
+
+    function updateAdminDisplay() {
+        const data = getData();
+        document.getElementById('adminRate1').value = data.rate1;
+        document.getElementById('adminRate2').value = data.rate2;
+        
+        const reqSection = document.getElementById('contractSection');
+        const reqList = document.getElementById('requestList');
+        reqList.innerHTML = '';
+        
+        const pendingUsers = data.users.filter(u => u.balance > 100 && u.contractStatus === 'none');
+        
+        if (pendingUsers.length > 0) {
+            reqSection.classList.remove('hidden');
+            pendingUsers.forEach(u => {
+                const div = document.createElement('div');
+                div.className = 'info-box';
+                div.innerHTML = `User ID: ${u.id} - Stand: ${u.balance.toFixed(2)}€ 
+                                 <button onclick="approveContract(${u.id})">Genehmigen</button>`;
+                reqList.appendChild(div);
+            });
+        } else {
+            reqSection.classList.add('
