@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniBank - Bankverwaltung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .login-view, .user-view, .admin-view {
+            display: none;
+        }
+
+        .login-view.active, .user-view.active, .admin-view.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .account-info {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .account-info p {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .amount {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 20px;
+        }
+
+        .interest-table {
+            width: 100%;
+            font-size: 13px;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+
+        .interest-table tr {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .interest-table td {
+            padding: 10px;
+        }
+
+        .status {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.pending {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .settings-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .settings-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .admin-requests {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .request-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .request-item p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .request-item button {
+            margin-top: 10px;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .btn-approve {
+            background: #28a745;
+            margin-right: 5px;
+            display: inline-block;
+            width: calc(50% - 3px);
+        }
+
+        .btn-reject {
+            background: #dc3545;
+            display: inline-block;
+            width: calc(50% - 3px);
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🏦 MiniBank</h1>
+        <p id="userRole"></p>
+    </div>
+
+    <div class="content">
+        <!-- LOGIN VIEW -->
+        <div class="login-view active">
+            <h2>Anmelden</h2>
+            <div class="form-group" style="margin-top: 25px;">
+                <label for="pinInput">PIN eingeben:</label>
+                <input type="password" id="pinInput" placeholder="PIN eingeben">
+            </div>
+            <button onclick="login()">Anmelden</button>
+            <div class="info-box" style="margin-top: 20px;">
+                📌 Demo-PIN für Nutzer: <strong>123456</strong><br>
+                📌 Demo-PIN für Admin: <strong>506715</strong>
+            </div>
+        </div>
+
+        <!-- USER VIEW -->
+        <div class="user-view">
+            <h2>Willkommen!</h2>
+
+            <div class="account-info">
+                <p>💰 Kontostand:</p>
+                <p class="amount" id="userBalance">0.00 €</p>
+            </div>
+
+            <div class="info-box">
+                <strong>Zinssätze (automatisch berechnet):</strong>
+            </div>
+
+            <table class="interest-table">
+                <tr>
+                    <td><strong>Betrag</strong></td>
+                    <td><strong>Zinssatz</strong></td>
+                </tr>
+                <tr>
+                    <td>1 Cent - 5€</td>
+                    <td id="rate1">3 Cent</td>
+                </tr>
+                <tr>
+                    <td>5€ - 100€</td>
+                    <td id="rate2">15 Cent</td>
+                </tr>
+                <tr>
+                    <td>Über 100€</td>
+                    <td>Sondervertrag (Antrag nötig)</td>
+                </tr>
+            </table>
+
+            <div class="form-group">
+                <label for="userDeposit">Geld einzahlen (€):</label>
+                <input type="number" id="userDeposit" placeholder="Betrag eingeben" step="0.01" min="0">
+                <button onclick="deposit()">Einzahlen</button>
+            </div>
+
+            <div id="userStatus" class="hidden"></div>
+
+            <div id="contractStatus" class="hidden"></div>
+
+            <button class="btn-secondary" onclick="calculateInterest()">💹 Zinsen berechnen</button>
+            <button class="logout-btn" onclick="logout()">Abmelden</button>
+        </div>
+
+        <!-- ADMIN VIEW -->
+        <div class="admin-view">
+            <h2>Admin-Panel</h2>
+
+            <div class="settings-section">
+                <h3>⚙️ Zinsätze ändern</h3>
+                <div class="form-group">
+                    <label for="adminRate1">Zinssatz für 1 Cent - 5€ (€):</label>
+                    <input type="number" id="adminRate1" step="0.01" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="adminRate2">Zinssatz für 5€ - 100€ (€):</label>
+                    <input type="number" id="adminRate2" step="0.01" min="0">
+                </div>
+                <button onclick="updateRates()">Zinssätze speichern</button>
+            </div>
+
+            <div class="settings-section">
+                <h3>🔐 PIN ändern</h3>
+                <div class="form-group">
+                    <label for="newPin">Neue Admin-PIN:</label>
+                    <input type="password" id="newPin" placeholder="Neue PIN eingeben">
+                </div>
+                <button onclick="changeAdminPin()">PIN ändern</button>
+            </div>
+
+            <div id="adminStatus" class="hidden"></div>
+
+            <div class="admin-requests" id="contractRequestsSection" style="display:none;">
+                <h3>📋 Sonderverträge (Über 100€)</h3>
+                <div id="contractRequests"></div>
+            </div>
+
+            <button class="btn-secondary" onclick="viewUsers()">Nutzer-Übersicht</button>
+            <button class="logout-btn" onclick="logout()">Abmelden</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialisierung beim Laden
+    window.addEventListener('load', function() {
+        initializeApp();
+    });
+
+    // APP-LOGIK
+    let currentUser = null;
+    let isAdmin = false;
+
+    function initializeApp() {
+        let data = localStorage.getItem('bankData');
+        if (!data) {
+            // Erste Initialisierung
+            const defaultData = {
+                users: [
+                    { id: 1, pin: '123456', balance: 50.00, contractStatus: 'none' },
+                    { id: 2, pin: '123457', balance: 75.50, contractStatus: 'none' }
+                ],
+                adminPin: '506715',
+                rate1: 0.03,
+                rate2: 0.15,
+                contractRequests: []
+            };
+            localStorage.setItem('bankData', JSON.stringify(defaultData));
+        }
+    }
+
+    function getAppData() {
+        return JSON.parse(localStorage.getItem('bankData'));
+    }
+
+    function saveAppData(data) {
+        localStorage.setItem('bankData', JSON.stringify(data));
+    }
+
+    function login() {
+        const pin = document.getElementById('pinInput').value;
+
+        if (!pin) {
+            alert('Bitte PIN eingeben!');
+            return;
+        }
+
+        const data = getAppData();
+
+        // Admin-Login
+        if (pin === data.adminPin) {
+            currentUser = null;
+            isAdmin = true;
+            showAdminView();
+            return;
+        }
+
+        // Nutzer-Login
+        const user = data.users.find(u => u.pin === pin);
+        if (user) {
+            currentUser = user;
+            isAdmin = false;
+            showUserView();
+            return;
+        }
+
+        alert('PIN ungültig!');
+        document.getElementById('pinInput').value = '';
+    }
+
+    function showLoginView() {
+        document.querySelectorAll('.login-view, .user-view, .admin-view').forEach(v => v.classList.remove('active'));
+        document.querySelector('.login-view').classList.add('active');
+        document.getElementById('pinInput').value = '';
+        document.getElementById('userRole').textContent = '';
+    }
+
+    function showUserView() {
+        document.querySelectorAll('.login-view, .user-view, .admin-view').forEach(v => v.classList.remove('active'));
+        document.querySelector('.user-view').classList.add('active');
+        document.getElementById('userRole').textContent = '👤 Nutzer-Modus';
+        updateUserDisplay();
+    }
+
+    function showAdminView() {
+        document.querySelectorAll('.login-view, .user-view, .admin-view').forEach(v => v.classList.remove('active'));
+        document.querySelector('.admin-view').classList.add('active');
+        document.getElementById('userRole').textContent = '🔒 Admin-Modus';
+        updateAdminDisplay();
+    }
+
+    function updateUserDisplay() {
+        const data = getAppData();
+        document.getElementById('userBalance').textContent = currentUser.balance.toFixed(2) + ' €';
+        document.getElementById('rate1').textContent = (data.rate1).toFixed(2) + ' €';
+        document.getElementById('rate2').textContent = (data.rate2).toFixed(2) + ' €';
+        document.getElementById('userStatus').classList.add('hidden');
+        document.getElementById('contractStatus').classList.add('hidden');
+
+        // Status für Sondervertrag
+        if (currentUser.balance > 100 && currentUser.contractStatus === 'none') {
+            const status = document.getElementById('contractStatus');
+            status.classList.remove('hidden');
+            status.innerHTML = '<div class="status pending">⏳ Ihr Kontostand übersteigt 100€. Ein Sondervertrag ist erforderlich. Der Admin muss diesen noch bestätigen.</div>';
+        }
+
+        if (currentUser.contractStatus === 'pending') {
+            const status = document.getElementById('contractStatus');
+            status.classList.remove('hidden');
+            status.innerHTML = '<div class="status pending">⏳ Sondervertrag beantragt - Warte auf Admin-Bestätigung</div>';
+        }
+
+        if (currentUser.contractStatus === 'approved') {
+            const status = document.getElementById('contractStatus');
+            status.classList.remove('hidden');
+            status.innerHTML = '<div class="status success">✅ Sondervertrag genehmigt!</div>';
+        }
+    }
+
+    function updateAdminDisplay()
