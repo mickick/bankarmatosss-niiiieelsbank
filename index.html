@@ -44,6 +44,8 @@
 
         .content {
             padding: 30px;
+            max-height: 85vh;
+            overflow-y: auto;
         }
 
         .login-view, .user-view, .admin-view {
@@ -90,6 +92,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s;
+            margin-bottom: 10px;
         }
 
         button:hover {
@@ -125,7 +128,7 @@
         .amount {
             font-weight: 700;
             color: #667eea;
-            font-size: 20px;
+            font-size: 24px;
         }
 
         .interest-table {
@@ -171,7 +174,6 @@
 
         .btn-secondary {
             background: #6c757d;
-            margin-top: 10px;
         }
 
         .btn-secondary:hover {
@@ -211,32 +213,63 @@
             font-size: 14px;
         }
 
-        .request-item button {
-            margin-top: 10px;
-            padding: 8px;
-            font-size: 14px;
-        }
-
         .btn-approve {
             background: #28a745;
-            margin-right: 5px;
             display: inline-block;
-            width: calc(50% - 3px);
+            width: calc(50% - 5px);
+            margin-right: 10px;
         }
 
         .btn-reject {
             background: #dc3545;
             display: inline-block;
-            width: calc(50% - 3px);
+            width: calc(50% - 5px);
         }
 
         .logout-btn {
             background: #dc3545;
-            margin-top: 20px;
         }
 
         .hidden {
+            display: none !important;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px;
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tab-content {
             display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
     </style>
 </head>
@@ -254,12 +287,11 @@
             <h2>Anmelden</h2>
             <div class="form-group" style="margin-top: 25px;">
                 <label for="pinInput">PIN eingeben:</label>
-                <input type="password" id="pinInput" placeholder="PIN eingeben">
+                <input type="password" id="pinInput" placeholder="PIN eingeben" onkeypress="if(event.key==='Enter') login()">
             </div>
             <button onclick="login()">Anmelden</button>
             <div class="info-box" style="margin-top: 20px;">
-                📌 Demo-PIN für Nutzer: <strong>123456</strong><br>
-                📌 Demo-PIN für Admin: <strong>506715</strong>
+                📌 Demo-PIN für Nutzer: <strong>123456</strong>
             </div>
         </div>
 
@@ -270,42 +302,84 @@
             <div class="account-info">
                 <p>💰 Kontostand:</p>
                 <p class="amount" id="userBalance">0.00 €</p>
+                <p style="margin-top: 10px; color: #666;">
+                    💳 Kredit-Limit: <span id="userCreditLimit">0.00 €</span>
+                </p>
             </div>
 
-            <div class="info-box">
-                <strong>Zinssätze (automatisch berechnet):</strong>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('overview')">Übersicht</button>
+                <button class="tab-btn" onclick="switchTab('transfer')">Überweisen</button>
+                <button class="tab-btn" onclick="switchTab('credit')">Kredit</button>
             </div>
 
-            <table class="interest-table">
-                <tr>
-                    <td><strong>Betrag</strong></td>
-                    <td><strong>Zinssatz</strong></td>
-                </tr>
-                <tr>
-                    <td>1 Cent - 5€</td>
-                    <td id="rate1">3 Cent</td>
-                </tr>
-                <tr>
-                    <td>5€ - 100€</td>
-                    <td id="rate2">15 Cent</td>
-                </tr>
-                <tr>
-                    <td>Über 100€</td>
-                    <td>Sondervertrag (Antrag nötig)</td>
-                </tr>
-            </table>
+            <!-- ÜBERSICHT TAB -->
+            <div id="overview" class="tab-content active">
+                <div class="info-box">
+                    <strong>Zinssätze (automatisch):</strong>
+                </div>
 
-            <div class="form-group">
-                <label for="userDeposit">Geld einzahlen (€):</label>
-                <input type="number" id="userDeposit" placeholder="Betrag eingeben" step="0.01" min="0">
-                <button onclick="deposit()">Einzahlen</button>
+                <table class="interest-table">
+                    <tr>
+                        <td><strong>Betrag</strong></td>
+                        <td><strong>Zinssatz</strong></td>
+                    </tr>
+                    <tr>
+                        <td>1¢ - 5€</td>
+                        <td id="rate1">3¢</td>
+                    </tr>
+                    <tr>
+                        <td>5€ - 100€</td>
+                        <td id="rate2">15¢</td>
+                    </tr>
+                    <tr>
+                        <td>Über 100€</td>
+                        <td>Sondervertrag</td>
+                    </tr>
+                </table>
+
+                <div class="form-group">
+                    <label for="userDeposit">Geld einzahlen (€):</label>
+                    <input type="number" id="userDeposit" placeholder="Betrag eingeben" step="0.01" min="0">
+                    <button onclick="deposit()">Einzahlen</button>
+                </div>
+
+                <div id="userStatus" class="hidden"></div>
+                <div id="contractStatus" class="hidden"></div>
+
+                <button class="btn-secondary" onclick="calculateInterest()">💹 Zinsen berechnen</button>
             </div>
 
-            <div id="userStatus" class="hidden"></div>
+            <!-- ÜBERWEISEN TAB -->
+            <div id="transfer" class="tab-content">
+                <div class="form-group">
+                    <label for="recipientId">Empfänger-ID:</label>
+                    <input type="number" id="recipientId" placeholder="ID eingeben" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="transferAmount">Betrag (€):</label>
+                    <input type="number" id="transferAmount" placeholder="Betrag eingeben" step="0.01" min="0">
+                </div>
+                <button onclick="transfer()">Überweisen</button>
+                <div id="transferStatus" class="hidden"></div>
+            </div>
 
-            <div id="contractStatus" class="hidden"></div>
+            <!-- KREDIT TAB -->
+            <div id="credit" class="tab-content">
+                <div class="account-info">
+                    <p>📊 Kredit-Informationen:</p>
+                    <p>Verfügbares Limit: <strong id="availableCredit">0.00 €</strong></p>
+                    <p>Verwendeter Kredit: <strong id="usedCredit">0.00 €</strong></p>
+                </div>
 
-            <button class="btn-secondary" onclick="calculateInterest()">💹 Zinsen berechnen</button>
+                <div class="form-group">
+                    <label for="creditAmount">Kredit aufnehmen (€):</label>
+                    <input type="number" id="creditAmount" placeholder="Betrag eingeben" step="0.01" min="0">
+                </div>
+                <button onclick="requestCredit()">Kredit beantragen</button>
+                <div id="creditStatus" class="hidden"></div>
+            </div>
+
             <button class="logout-btn" onclick="logout()">Abmelden</button>
         </div>
 
@@ -313,64 +387,79 @@
         <div class="admin-view">
             <h2>Admin-Panel</h2>
 
-            <div class="settings-section">
-                <h3>⚙️ Zinsätze ändern</h3>
-                <div class="form-group">
-                    <label for="adminRate1">Zinssatz für 1 Cent - 5€ (€):</label>
-                    <input type="number" id="adminRate1" step="0.01" min="0">
-                </div>
-                <div class="form-group">
-                    <label for="adminRate2">Zinssatz für 5€ - 100€ (€):</label>
-                    <input type="number" id="adminRate2" step="0.01" min="0">
-                </div>
-                <button onclick="updateRates()">Zinssätze speichern</button>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchAdminTab('settings')">Einstellungen</button>
+                <button class="tab-btn" onclick="switchAdminTab('requests')">Anfragen</button>
+                <button class="tab-btn" onclick="switchAdminTab('users')">Nutzer</button>
             </div>
 
-            <div class="settings-section">
-                <h3>🔐 PIN ändern</h3>
-                <div class="form-group">
-                    <label for="newPin">Neue Admin-PIN:</label>
-                    <input type="password" id="newPin" placeholder="Neue PIN eingeben">
+            <!-- SETTINGS TAB -->
+            <div id="settings" class="tab-content active">
+                <div class="settings-section">
+                    <h3>⚙️ Zinsätze ändern</h3>
+                    <div class="form-group">
+                        <label for="adminRate1">Zinssatz für 1¢ - 5€ (€):</label>
+                        <input type="number" id="adminRate1" step="0.01" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminRate2">Zinssatz für 5€ - 100€ (€):</label>
+                        <input type="number" id="adminRate2" step="0.01" min="0">
+                    </div>
+                    <button onclick="updateRates()">Zinssätze speichern</button>
                 </div>
-                <button onclick="changeAdminPin()">PIN ändern</button>
+
+                <div class="settings-section">
+                    <h3>🔐 PIN ändern</h3>
+                    <div class="form-group">
+                        <label for="newPin">Neue Admin-PIN:</label>
+                        <input type="password" id="newPin" placeholder="Neue PIN eingeben">
+                    </div>
+                    <button onclick="changeAdminPin()">PIN ändern</button>
+                </div>
+
+                <div id="adminStatus" class="hidden"></div>
             </div>
 
-            <div id="adminStatus" class="hidden"></div>
-
-            <div class="admin-requests" id="contractRequestsSection" style="display:none;">
-                <h3>📋 Sonderverträge (Über 100€)</h3>
+            <!-- REQUESTS TAB -->
+            <div id="requests" class="tab-content">
+                <h3>📋 Anfragen</h3>
                 <div id="contractRequests"></div>
+                <div id="creditRequests"></div>
             </div>
 
-            <button class="btn-secondary" onclick="viewUsers()">Nutzer-Übersicht</button>
+            <!-- USERS TAB -->
+            <div id="users" class="tab-content">
+                <h3>👥 Nutzer-Übersicht</h3>
+                <div id="usersList"></div>
+            </div>
+
             <button class="logout-btn" onclick="logout()">Abmelden</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Initialisierung beim Laden
     window.addEventListener('load', function() {
         initializeApp();
     });
 
-    // APP-LOGIK
     let currentUser = null;
     let isAdmin = false;
 
     function initializeApp() {
         let data = localStorage.getItem('bankData');
         if (!data) {
-            // Erste Initialisierung
             const defaultData = {
                 users: [
-                    { id: 1, pin: '123456', balance: 50.00, contractStatus: 'none' },
-                    { id: 2, pin: '123457', balance: 75.50, contractStatus: 'none' }
+                    { id: 1, pin: '123456', balance: 50.00, credit: 0, contractStatus: 'none' },
+                    { id: 2, pin: '123457', balance: 75.50, credit: 0, contractStatus: 'none' },
+                    { id: 3, pin: '111111', balance: 150.00, credit: 0, contractStatus: 'pending' }
                 ],
-                adminPin: '506715',
+                adminPin: btoa('506715'),
                 rate1: 0.03,
                 rate2: 0.15,
-                contractRequests: []
+                contractRequests: [],
+                creditRequests: []
             };
             localStorage.setItem('bankData', JSON.stringify(defaultData));
         }
@@ -380,88 +469,4 @@
         return JSON.parse(localStorage.getItem('bankData'));
     }
 
-    function saveAppData(data) {
-        localStorage.setItem('bankData', JSON.stringify(data));
-    }
-
-    function login() {
-        const pin = document.getElementById('pinInput').value;
-
-        if (!pin) {
-            alert('Bitte PIN eingeben!');
-            return;
-        }
-
-        const data = getAppData();
-
-        // Admin-Login
-        if (pin === data.adminPin) {
-            currentUser = null;
-            isAdmin = true;
-            showAdminView();
-            return;
-        }
-
-        // Nutzer-Login
-        const user = data.users.find(u => u.pin === pin);
-        if (user) {
-            currentUser = user;
-            isAdmin = false;
-            showUserView();
-            return;
-        }
-
-        alert('PIN ungültig!');
-        document.getElementById('pinInput').value = '';
-    }
-
-    function showLoginView() {
-        document.querySelectorAll('.login-view, .user-view, .admin-view').forEach(v => v.classList.remove('active'));
-        document.querySelector('.login-view').classList.add('active');
-        document.getElementById('pinInput').value = '';
-        document.getElementById('userRole').textContent = '';
-    }
-
-    function showUserView() {
-        document.querySelectorAll('.login-view, .user-view, .admin-view').forEach(v => v.classList.remove('active'));
-        document.querySelector('.user-view').classList.add('active');
-        document.getElementById('userRole').textContent = '👤 Nutzer-Modus';
-        updateUserDisplay();
-    }
-
-    function showAdminView() {
-        document.querySelectorAll('.login-view, .user-view, .admin-view').forEach(v => v.classList.remove('active'));
-        document.querySelector('.admin-view').classList.add('active');
-        document.getElementById('userRole').textContent = '🔒 Admin-Modus';
-        updateAdminDisplay();
-    }
-
-    function updateUserDisplay() {
-        const data = getAppData();
-        document.getElementById('userBalance').textContent = currentUser.balance.toFixed(2) + ' €';
-        document.getElementById('rate1').textContent = (data.rate1).toFixed(2) + ' €';
-        document.getElementById('rate2').textContent = (data.rate2).toFixed(2) + ' €';
-        document.getElementById('userStatus').classList.add('hidden');
-        document.getElementById('contractStatus').classList.add('hidden');
-
-        // Status für Sondervertrag
-        if (currentUser.balance > 100 && currentUser.contractStatus === 'none') {
-            const status = document.getElementById('contractStatus');
-            status.classList.remove('hidden');
-            status.innerHTML = '<div class="status pending">⏳ Ihr Kontostand übersteigt 100€. Ein Sondervertrag ist erforderlich. Der Admin muss diesen noch bestätigen.</div>';
-        }
-
-        if (currentUser.contractStatus === 'pending') {
-            const status = document.getElementById('contractStatus');
-            status.classList.remove('hidden');
-            status.innerHTML = '<div class="status pending">⏳ Sondervertrag beantragt - Warte auf Admin-Bestätigung</div>';
-        }
-
-        if (currentUser.contractStatus === 'approved') {
-            const status = document.getElementById('contractStatus');
-            status.classList.remove('hidden');
-            status.innerHTML = '<div class="status success">✅ Sondervertrag genehmigt!</div>';
-        }
-    }
-
-    function updateAdminDisplay()
+    function saveAppData(
