@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiniBank - Server Version</title>
+    <title>niiiieelsbank- Komplett</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
@@ -26,80 +26,49 @@
         .btn-secondary { background: #6c757d; }
         .btn-danger { background: #dc3545; }
         .admin-section { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ddd; }
-        h3 { margin-top: 10px; margin-bottom: 10px; }
         hr { margin: 15px 0; border: 0; border-top: 1px solid #eee; }
-        .tab-buttons { display: flex; gap: 10px; margin-bottom: 15px; }
-        .tab-btn { flex: 1; padding: 8px; background: #e0e0e0; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .tab-btn.active { background: #667eea; color: white; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h1>🏦 MiniBank</h1>
+        <h1>🏦 niiiieelsBank</h1>
         <p id="userRole"></p>
     </div>
     <div class="content">
-        <!-- LOGIN & REGISTRIERUNG -->
+        <!-- LOGIN -->
         <div id="login-view" class="view active">
-            <div class="tab-buttons">
-                <button class="tab-btn active" onclick="switchTab('login')">Anmelden</button>
-                <button class="tab-btn" onclick="switchTab('register')">Registrieren</button>
+            <h2>Anmelden</h2>
+            <div class="form-group" style="margin-top:20px;">
+                <label>PIN eingeben:</label>
+                <input type="password" id="pinInput" placeholder="####">
+                <button onclick="login()">Anmelden</button>
             </div>
-
-            <!-- ANMELDEN TAB -->
-            <div id="login-tab">
-                <h2>Anmelden</h2>
-                <div class="form-group" style="margin-top:20px;">
-                    <label>Benutzername:</label>
-                    <input type="text" id="username" placeholder="Benutzername eingeben">
-                    <label>PIN eingeben:</label>
-                    <input type="password" id="pinInput" placeholder="####">
-                    <button onclick="login()">Anmelden</button>
-                </div>
-                <div class="info-box">📌 Test Admin PIN: 506715</div>
-                <div class="info-box">👤 Test Nutzer: username "user1", PIN: "1234"</div>
-            </div>
-
-            <!-- REGISTRIERUNG TAB -->
-            <div id="register-tab" style="display: none;">
-                <h2>Neues Konto erstellen</h2>
-                <div class="form-group" style="margin-top:20px;">
-                    <label>Benutzername:</label>
-                    <input type="text" id="regUsername" placeholder="Wähle einen Benutzernamen">
-                    <label>PIN (mindestens 4 Ziffern):</label>
-                    <input type="password" id="regPin" placeholder="####">
-                    <label>PIN wiederholen:</label>
-                    <input type="password" id="regPin2" placeholder="####">
-                    <button onclick="register()">Registrieren</button>
-                </div>
-                <div class="info-box">✅ Nach der Registrierung kannst du dich sofort anmelden!</div>
-            </div>
+            <div class="info-box">📌 Test-Nutzer PIN: 123456</div>
         </div>
 
-        <!-- USER VIEW -->
+        <!-- USER -->
         <div id="user-view" class="view">
             <div class="account-info">
                 <p>Mein Kontostand</p>
                 <p class="amount" id="userBalance">0.00 €</p>
-                <p style="font-size: 12px; color: #666;">Nutzer: <span id="displayUsername"></span></p>
             </div>
             <div id="contractStatus"></div>
             <div class="info-box">
                 <strong>Zinssätze:</strong><br>
-                bis 5€: <span id="r1">0.03</span>€ | bis 100€: <span id="r2">0.15</span>€ | >100€: 0.50€ (mit Vertrag)
+                bis 5€: <span id="r1">0.03</span>€ | bis 100€: <span id="r2">0.15</span>€ | >100€: Sondervertrag
             </div>
             <div class="form-group">
                 <label>💰 Betrag eingeben:</label>
-                <input type="number" id="amountInput" step="0.01" placeholder="0.00">
+                <input type="number" id="amountInput" step="0.01">
                 <button onclick="updateBalance('deposit')">Einzahlen</button>
                 <button class="btn-secondary" onclick="updateBalance('loan')">Kredit aufnehmen</button>
             </div>
             <hr>
             <div class="form-group">
                 <label>💸 Überweisen:</label>
-                <input type="text" id="targetUsername" placeholder="Benutzername des Empfängers">
+                <input type="password" id="targetPin" placeholder="PIN Empfänger">
                 <input type="number" id="transferAmount" step="0.01" placeholder="Betrag €">
                 <button onclick="transfer()">Geld senden</button>
             </div>
@@ -107,38 +76,26 @@
             <button class="btn-danger" onclick="logout()">Abmelden</button>
         </div>
 
-        <!-- ADMIN VIEW -->
+        <!-- ADMIN -->
         <div id="admin-view" class="view">
             <h2>Admin-Panel</h2>
-            
             <div class="admin-section">
-                <h3>⚙️ Zinssätze ändern</h3>
+                <h3>⚙️ Zinsen</h3>
                 <label>Rate 1 (bis 5€):</label>
-                <input type="number" id="adminRate1" step="0.01" placeholder="0.03">
+                <input type="number" id="adminRate1" step="0.01">
                 <label>Rate 2 (bis 100€):</label>
-                <input type="number" id="adminRate2" step="0.01" placeholder="0.15">
+                <input type="number" id="adminRate2" step="0.01">
                 <button onclick="updateRates()">Speichern</button>
             </div>
-
             <div class="admin-section">
-                <h3>🔐 Admin-PIN ändern</h3>
-                <label>Aktuelle Admin-PIN:</label>
-                <input type="password" id="currentAdminPin" placeholder="Aktuelle PIN">
-                <label>Neue Admin-PIN:</label>
-                <input type="password" id="newAdminPin" placeholder="Neue PIN">
+                <h3>🔐 PIN ändern</h3>
+                <input type="password" id="newPin" placeholder="Neue Admin-PIN">
                 <button onclick="changeAdminPin()">PIN ändern</button>
             </div>
-
             <div id="contractSection" class="admin-section" style="display:none;">
-                <h3>📋 Sonderverträge (ausstehend)</h3>
+                <h3>📋 Sonderverträge</h3>
                 <div id="requestList"></div>
             </div>
-
-            <div class="admin-section">
-                <h3>👥 Alle Nutzer</h3>
-                <div id="usersList"></div>
-            </div>
-
             <button class="btn-danger" onclick="logout()">Abmelden</button>
         </div>
     </div>
@@ -146,99 +103,35 @@
 
 <script>
     let currentUser = null;
-    let adminPin = null;
 
-    const API_URL = 'http://localhost:3000/api';
-
-    // TAB WECHSEL
-    function switchTab(tab) {
-        const loginTab = document.getElementById('login-tab');
-        const registerTab = document.getElementById('register-tab');
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        
-        tabBtns.forEach(btn => btn.classList.remove('active'));
-        
-        if (tab === 'login') {
-            loginTab.style.display = 'block';
-            registerTab.style.display = 'none';
-            tabBtns[0].classList.add('active');
-        } else {
-            loginTab.style.display = 'none';
-            registerTab.style.display = 'block';
-            tabBtns[1].classList.add('active');
+    function init() {
+        if (!localStorage.getItem('bankData')) {
+            localStorage.setItem('bankData', JSON.stringify({
+                users: [{id: 1, pin: '123456', balance: 10.0, contract: 'none'}, {id: 2, pin: '123457', balance: 0.0, contract: 'none'}],
+                adminPin: '506715', rate1: 0.03, rate2: 0.15
+            }));
         }
     }
 
-    // REGISTRIERUNG
-    function register() {
-        const username = document.getElementById('regUsername').value;
-        const pin = document.getElementById('regPin').value;
-        const pin2 = document.getElementById('regPin2').value;
-        
-        if (!username || pin.length < 4) {
-            return alert('Benutzername erforderlich und PIN mind. 4 Ziffern!');
-        }
-        
-        if (pin !== pin2) {
-            return alert('PINs stimmen nicht überein!');
-        }
-        
-        fetch(`${API_URL}/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, pin })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                alert('✅ Erfolgreich registriert! Du kannst dich jetzt anmelden.');
-                document.getElementById('regUsername').value = '';
-                document.getElementById('regPin').value = '';
-                document.getElementById('regPin2').value = '';
-                switchTab('login');
-            } else {
-                alert('❌ ' + data.error);
-            }
-        })
-        .catch(err => alert('Fehler: ' + err.message));
-    }
+    const getData = () => JSON.parse(localStorage.getItem('bankData'));
+    const saveData = (d) => localStorage.setItem('bankData', JSON.stringify(d));
 
-    // LOGIN
     function login() {
-        const username = document.getElementById('username').value;
         const pin = document.getElementById('pinInput').value;
-        
-        if (!username || !pin) {
-            return alert('Benutzername und PIN erforderlich!');
+        const data = getData();
+        if (pin === data.adminPin) {
+            showView('admin-view');
+            document.getElementById('userRole').textContent = '🔒 Administrator';
+            updateAdmin();
+        } else {
+            const user = data.users.find(u => u.pin === pin);
+            if (user) {
+                currentUser = user;
+                showView('user-view');
+                document.getElementById('userRole').textContent = '👤 Kunde';
+                updateUser();
+            } else alert('PIN falsch!');
         }
-        
-        fetch(`${API_URL}/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, pin })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                if (data.role === 'admin') {
-                    adminPin = pin;
-                    showView('admin-view');
-                    document.getElementById('userRole').textContent = '🔒 Administrator';
-                    updateAdmin();
-                } else {
-                    currentUser = data.user;
-                    showView('user-view');
-                    document.getElementById('userRole').textContent = '👤 Kunde';
-                    document.getElementById('displayUsername').textContent = currentUser.username;
-                    updateUser();
-                }
-                document.getElementById('username').value = '';
-                document.getElementById('pinInput').value = '';
-            } else {
-                alert('❌ ' + data.error);
-            }
-        })
-        .catch(err => alert('Fehler: ' + err.message));
     }
 
     function showView(id) {
@@ -248,243 +141,105 @@
 
     function logout() {
         currentUser = null;
-        adminPin = null;
         document.getElementById('userRole').textContent = '';
+        document.getElementById('pinInput').value = '';
         showView('login-view');
-        switchTab('login');
     }
 
-    // USER: KONTOSTAND AKTUALISIEREN
     function updateUser() {
-        fetch(`${API_URL}/user/${currentUser.id}`)
-            .then(r => r.json())
-            .then(user => {
-                document.getElementById('userBalance').textContent = user.balance.toFixed(2) + ' €';
-                currentUser = user;
-                
-                const statusDiv = document.getElementById('contractStatus');
-                statusDiv.innerHTML = '';
-                if (user.balance > 100 && user.contract === 'none') {
-                    statusDiv.innerHTML = '<div class="status pending">⚠️ Kontostand > 100€. Bitte Sondervertrag anfordern!</div>';
-                } else if (user.contract === 'approved') {
-                    statusDiv.innerHTML = '<div class="status success">✅ Sondervertrag aktiv!</div>';
-                }
-            })
-            .catch(err => console.error('Fehler beim Laden:', err));
+        const data = getData();
+        const user = data.users.find(u => u.pin === currentUser.pin);
+        document.getElementById('userBalance').textContent = user.balance.toFixed(2) + ' €';
+        document.getElementById('r1').textContent = data.rate1;
+        document.getElementById('r2').textContent = data.rate2;
+        const statusDiv = document.getElementById('contractStatus');
+        statusDiv.innerHTML = '';
+        if (user.balance > 100 && user.contract === 'none') {
+            statusDiv.innerHTML = '<div class="status pending">⚠️ Stand > 100€. Bitte Sondervertrag anfordern!</div>';
+        } else if (user.contract === 'approved') {
+            statusDiv.innerHTML = '<div class="status success">✅ Sondervertrag aktiv.</div>';
+        }
     }
 
-    // USER: EINZAHLUNG / KREDIT
     function updateBalance(type) {
         const amt = parseFloat(document.getElementById('amountInput').value);
-        if (isNaN(amt) || amt <= 0) {
-            return alert('Ungültiger Betrag!');
-        }
-        
-        fetch(`${API_URL}/deposit`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId: currentUser.id, amount: amt })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                updateUser();
-                document.getElementById('amountInput').value = '';
-                if (type === 'loan') {
-                    alert('✅ Kredit gutgeschrieben!');
-                } else {
-                    alert('✅ Eingezahlt!');
-                }
-            } else {
-                alert('❌ ' + data.error);
-            }
-        })
-        .catch(err => alert('Fehler: ' + err.message));
+        if (isNaN(amt) || amt <= 0) return alert('Ungültiger Betrag');
+        const data = getData();
+        const user = data.users.find(u => u.pin === currentUser.pin);
+        user.balance += amt;
+        saveData(data);
+        updateUser();
+        document.getElementById('amountInput').value = '';
+        if(type === 'loan') alert('Kredit gutgeschrieben!');
     }
 
-    // USER: ÜBERWEISUNG
     function transfer() {
-        const recipientUsername = document.getElementById('targetUsername').value;
+        const tPin = document.getElementById('targetPin').value;
         const amt = parseFloat(document.getElementById('transferAmount').value);
-        
-        if (!recipientUsername || isNaN(amt) || amt <= 0) {
-            return alert('Alle Felder erforderlich!');
-        }
-        
-        fetch(`${API_URL}/transfer`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                senderId: currentUser.id, 
-                recipientUsername: recipientUsername, 
-                amount: amt 
-            })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                
-            if (data.success) {
-                updateUser();
-                document.getElementById('targetUsername').value = '';
-                document.getElementById('transferAmount').value = '';
-                alert('✅ Erfolgreich gesendet!');
-            } else {
-                alert('❌ ' + data.error);
-            }
-        })
-        .catch(err => alert('Fehler: ' + err.message));
+        const data = getData();
+        const sender = data.users.find(u => u.pin === currentUser.pin);
+        const rec = data.users.find(u => u.pin === tPin);
+        if (!rec || isNaN(amt) || sender.balance < amt) return alert('Überweisung fehlgeschlagen!');
+        sender.balance -= amt;
+        rec.balance += amt;
+        saveData(data);
+        updateUser();
+        alert('Erfolgreich gesendet!');
     }
 
-    // USER: ZINSEN GUTSCHREIBEN
     function calculateInterest() {
-        fetch(`${API_URL}/interest`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId: currentUser.id })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                updateUser();
-                alert('✅ Zinsen: ' + data.interest + '€ gutgeschrieben!');
-            } else {
-                alert('❌ ' + data.error);
-            }
-        })
-        .catch(err => alert('Fehler: ' + err.message));
+        const data = getData();
+        const user = data.users.find(u => u.pin === currentUser.pin);
+        let int = 0;
+        if (user.balance > 0 && user.balance <= 5) int = data.rate1;
+        else if (user.balance > 5 && user.balance <= 100) int = data.rate2;
+        else if (user.balance > 100 && user.contract === 'approved') int = 0.50;
+        else if (user.balance > 100) return alert('Kein Sondervertrag vorhanden!');
+        user.balance += int;
+        saveData(data);
+        updateUser();
+        alert('Zinsen: ' + int.toFixed(2) + '€ gutgeschrieben!');
     }
 
-    // ADMIN: PANEL AKTUALISIEREN
     function updateAdmin() {
-        // Zinssätze laden
-        fetch(`${API_URL}/admin/rates`)
-            .then(r => r.json())
-            .then(data => {
-                document.getElementById('adminRate1').value = data.rate1;
-                document.getElementById('adminRate2').value = data.rate2;
-                document.getElementById('r1').textContent = data.rate1;
-                document.getElementById('r2').textContent = data.rate2;
-            })
-            .catch(err => console.error('Fehler beim Laden der Zinssätze:', err));
-
-        // Sonderverträge laden
-        fetch(`${API_URL}/admin/contracts`)
-            .then(r => r.json())
-            .then(users => {
-                const list = document.getElementById('requestList');
-                list.innerHTML = '';
-                if (users.length > 0) {
-                    document.getElementById('contractSection').style.display = 'block';
-                    users.forEach(u => {
-                        list.innerHTML += `
-                            <div class="info-box">
-                                <strong>Nutzer: ${u.username}</strong><br>
-                                Kontostand: ${u.balance.toFixed(2)}€
-                                <button onclick="approve(${u.id})" style="margin-top: 8px; width: 100%; background: #28a745;">✅ Genehmigen</button>
-                            </div>
-                        `;
-                    });
-                } else {
-                    document.getElementById('contractSection').style.display = 'none';
-                }
-            })
-            .catch(err => console.error('Fehler beim Laden der Verträge:', err));
-
-        // Alle Nutzer laden
-        fetch(`${API_URL}/admin/users`)
-            .then(r => r.json())
-            .then(users => {
-                const list = document.getElementById('usersList');
-                list.innerHTML = '';
-                if (users.length > 0) {
-                    users.forEach(u => {
-                        let contractStatus = u.contract === 'approved' ? '✅' : '⏳';
-                        list.innerHTML += `
-                            <div class="info-box">
-                                <strong>${u.username}</strong><br>
-                                Saldo: ${u.balance.toFixed(2)}€ | Vertrag: ${contractStatus}
-                            </div>
-                        `;
-                    });
-                }
-            })
-            .catch(err => console.error('Fehler beim Laden der Nutzer:', err));
+        const data = getData();
+        document.getElementById('adminRate1').value = data.rate1;
+        document.getElementById('adminRate2').value = data.rate2;
+        const list = document.getElementById('requestList');
+        list.innerHTML = '';
+        const needs = data.users.filter(u => u.balance > 100 && u.contract === 'none');
+        if (needs.length > 0) {
+            document.getElementById('contractSection').style.display = 'block';
+            needs.forEach(u => {
+                list.innerHTML += `<div class="info-box">User ${u.id}: ${u.balance}€ <button onclick="approve(${u.id})">OK</button></div>`;
+            });
+        } else document.getElementById('contractSection').style.display = 'none';
     }
 
-    // ADMIN: ZINSSÄTZE ÄNDERN
     function updateRates() {
-        const rate1 = parseFloat(document.getElementById('adminRate1').value);
-        const rate2 = parseFloat(document.getElementById('adminRate2').value);
-        
-        if (isNaN(rate1) || isNaN(rate2)) {
-            return alert('Ungültige Zinssätze!');
-        }
-        
-        fetch(`${API_URL}/admin/rates`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ adminPin, rate1, rate2 })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                alert('✅ Zinssätze aktualisiert!');
-                updateAdmin();
-            } else {
-                alert('❌ ' + data.error);
-            }
-        })
-        .catch(err => alert('Fehler: ' + err.message));
+        const data = getData();
+        data.rate1 = parseFloat(document.getElementById('adminRate1').value);
+        data.rate2 = parseFloat(document.getElementById('adminRate2').value);
+        saveData(data);
+        alert('Zinsen aktualisiert!');
     }
 
-    // ADMIN: ADMIN-PIN ÄNDERN
     function changeAdminPin() {
-        const currentPin = document.getElementById('currentAdminPin').value;
-        const newPin = document.getElementById('newAdminPin').value;
-        
-        if (!currentPin || !newPin || newPin.length < 4) {
-            return alert('Beide PINs erforderlich! Neue PIN mind. 4 Ziffern.');
-        }
-        
-        fetch(`${API_URL}/admin/change-pin`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ currentPin, newPin })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                adminPin = newPin;
-                alert('✅ Admin-PIN geändert!');
-                document.getElementById('currentAdminPin').value = '';
-                document.getElementById('newAdminPin').value = '';
-            } else {
-                alert('❌ ' + data.error);
-            }
-        })
-        .catch(err => alert('Fehler: ' + err.message));
+        const data = getData();
+        data.adminPin = document.getElementById('newPin').value;
+        saveData(data);
+        alert('Admin-PIN geändert!');
     }
 
-    // ADMIN: SONDERVERTRAG GENEHMIGEN
-    function approve(userId) {
-        fetch(`${API_URL}/admin/approve`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, adminPin })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                alert('✅ Sondervertrag genehmigt!');
-                updateAdmin();
-            } else {
-                alert('❌ ' + data.error);
-            }
-        })
-        .catch(err => alert('Fehler: ' + err.message));
+    function approve(id) {
+        const data = getData();
+        const user = data.users.find(u => u.id === id);
+        user.contract = 'approved';
+        saveData(data);
+        updateAdmin();
     }
+
+    init();
 </script>
-
 </body>
 </html>
