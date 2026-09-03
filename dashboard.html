@@ -14,132 +14,157 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
         .container {
+            max-width: 600px;
+            margin: 0 auto;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 500px;
             padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
         }
         h1 {
             color: #333;
-            margin-bottom: 10px;
-        }
-        .user-info {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            border-left: 4px solid #667eea;
-        }
-        .user-info p {
-            color: #666;
-            margin: 5px 0;
-        }
-        .balance {
             font-size: 24px;
+        }
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
             font-weight: bold;
-            color: #667eea;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        .balance-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .balance-amount {
+            font-size: 36px;
+            font-weight: bold;
             margin-top: 10px;
         }
-        .button-group {
+        .tabs {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-top: 20px;
+            margin-bottom: 20px;
         }
-        button {
+        .tab-button {
             padding: 12px;
-            border: none;
-            border-radius: 5px;
-            font-size: 14px;
+            border: 2px solid #ddd;
+            background: white;
             cursor: pointer;
+            border-radius: 5px;
             font-weight: bold;
             transition: all 0.3s;
         }
-        .btn-primary {
+        .tab-button.active {
+            border-color: #667eea;
             background: #667eea;
             color: white;
         }
-        .btn-primary:hover {
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
             background: #5568d3;
         }
-        .btn-logout {
-            background: #e74c3c;
-            color: white;
-            grid-column: 1 / -1;
-        }
-        .btn-logout:hover {
-            background: #c0392b;
-        }
         .message {
-            padding: 12px;
+            padding: 10px;
             border-radius: 5px;
             margin-bottom: 15px;
-            text-align: center;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
         .success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Willkommen! 👋</h1>
-        
-        <div class="user-info">
-            <p><strong>Benutzer:</strong> <span id="username"></span></p>
-            <div class="balance">
-                Kontostand: <span id="balance">0.00</span> €
-            </div>
-        </div>
-
-        <div class="message success">
-            ✅ Du bist erfolgreich angemeldet!
-        </div>
-
-        <div class="button-group">
-            <button class="btn-primary">Einzahlung</button>
-            <button class="btn-primary">Auszahlung</button>
-            <button class="btn-primary">Überweisung</button>
-            <button class="btn-primary">Kredit</button>
-            <button class="btn-logout" onclick="logout()">Abmelden</button>
-        </div>
-    </div>
-
-    <script>
-        // Beim Laden der Seite: Prüfe, ob Benutzer angemeldet ist
-        window.addEventListener('DOMContentLoaded', () => {
-            const currentUser = localStorage.getItem('minibank_currentUser');
-            
-            if (!currentUser) {
-                // Nicht angemeldet → zurück zur Login-Seite
-                window.location.href = 'index.html';
-                return;
-            }
-
-            // Benutzerdaten aus localStorage laden
-            const users = JSON.parse(localStorage.getItem('minibank_users') || '[]');
-            const user = users.find(u => u.username === currentUser);
-
-            if (user) {
-                document.getElementById('username').textContent = user.username;
-                document.getElementById('balance').textContent = user.balance.toFixed(2);
-            }
-        });
-
-        function logout() {
-            localStorage.removeItem('minibank_currentUser');
-            window.location.href = 'index.html';
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
         }
-    </script>
-</body>
-</html>
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .credit-list {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .credit-item {
+            background: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+            border-radius: 3px;
+        }
+        .credit-item p {
+            margin: 5px 0;
+            font-size: 14px;
+        
