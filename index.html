@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiniBank</title>
+    <title>MiniBank - Login</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,307 +19,277 @@
             align-items: center;
             padding: 20px;
         }
-
         .container {
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             width: 100%;
             max-width: 400px;
-            padding: 40px;
+            padding: 30px;
         }
-
-        .logo {
+        h1 {
+            color: #333;
             text-align: center;
             margin-bottom: 30px;
-            font-size: 28px;
-            font-weight: bold;
-            color: #667eea;
         }
-
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             color: #333;
-            font-weight: 500;
-            font-size: 14px;
+            font-weight: bold;
         }
-
         input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
         }
-
         input:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
         }
-
         button {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s;
             margin-top: 10px;
         }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        .btn-primary {
+            background: #667eea;
+            color: white;
         }
-
-        button:active {
-            transform: translateY(0);
+        .btn-primary:hover {
+            background: #5568d3;
         }
-
-        .toggle-btn {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-            margin-top: 20px;
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
         }
-
-        .toggle-btn:hover {
-            background: #f5f5f5;
+        .btn-secondary:hover {
+            background: #7f8c8d;
         }
-
-        .message {
-            padding: 12px;
-            border-radius: 8px;
+        .tabs {
+            display: flex;
+            gap: 10px;
             margin-bottom: 20px;
-            text-align: center;
-            font-size: 14px;
+        }
+        .tab-button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: #f0f0f0;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+        }
+        .tab-content {
             display: none;
         }
-
-        .message.success {
-            background: #d4edda;
-            color: #155724;
+        .tab-content.active {
             display: block;
         }
-
-        .message.error {
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .error {
             background: #f8d7da;
             color: #721c24;
-            display: block;
+            border: 1px solid #f5c6cb;
         }
-
-        .hidden {
-            display: none;
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
-
-        h2 {
+        .toggle-text {
             text-align: center;
-            margin-bottom: 30px;
-            color: #333;
-            font-size: 24px;
+            margin-top: 15px;
+            color: #666;
+            font-size: 14px;
         }
-
-        .info-text {
-            font-size: 12px;
-            color: #888;
-            margin-top: 5px;
+        .toggle-text a {
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">🏦 MiniBank</div>
+        <h1>🏦 MiniBank</h1>
 
-        <!-- LOGIN FORM -->
-        <div id="loginForm">
-            <h2>Anmelden</h2>
-            <div id="loginMessage" class="message"></div>
-            
-            <div class="form-group">
-                <label for="loginUsername">Benutzername</label>
-                <input type="text" id="loginUsername" placeholder="z.B. john123">
-            </div>
+        <div id="message"></div>
 
-            <div class="form-group">
-                <label for="loginPin">PIN (4+ Ziffern)</label>
-                <input type="password" id="loginPin" placeholder="z.B. 1234">
-            </div>
-
-            <button onclick="handleLogin()">Anmelden</button>
-            <button class="toggle-btn" onclick="toggleForms()">Neu registrieren →</button>
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('login')">Anmelden</button>
+            <button class="tab-button" onclick="switchTab('register')">Registrieren</button>
+            <button class="tab-button" onclick="switchTab('admin')">Admin</button>
         </div>
 
-        <!-- REGISTRATION FORM -->
-        <div id="registerForm" class="hidden">
-            <h2>Registrieren</h2>
-            <div id="registerMessage" class="message"></div>
-            
-            <div class="form-group">
-                <label for="regUsername">Benutzername</label>
-                <input type="text" id="regUsername" placeholder="z.B. john123">
-                <div class="info-text">Mindestens 3 Zeichen</div>
-            </div>
+        <!-- LOGIN TAB -->
+        <div id="login" class="tab-content active">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-username">Benutzername</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-pin">PIN</label>
+                    <input type="password" id="login-pin" placeholder="Mindestens 4 Ziffern" required>
+                </div>
+                <button type="submit" class="btn-primary">Anmelden</button>
+            </form>
+        </div>
 
-            <div class="form-group">
-                <label for="regPin">PIN</label>
-                <input type="password" id="regPin" placeholder="z.B. 1234">
-                <div class="info-text">Mindestens 4 Ziffern</div>
-            </div>
+        <!-- REGISTER TAB -->
+        <div id="register" class="tab-content">
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="reg-username">Benutzername</label>
+                    <input type="text" id="reg-username" placeholder="Mindestens 3 Zeichen" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-pin">PIN</label>
+                    <input type="password" id="reg-pin" placeholder="Mindestens 4 Ziffern" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-pin-confirm">PIN bestätigen</label>
+                    <input type="password" id="reg-pin-confirm" placeholder="PIN wiederholen" required>
+                </div>
+                <button type="submit" class="btn-primary">Registrieren</button>
+            </form>
+        </div>
 
-            <div class="form-group">
-                <label for="regPin2">PIN wiederholen</label>
-                <input type="password" id="regPin2" placeholder="PIN erneut eingeben">
-            </div>
-
-            <button onclick="handleRegister()">Registrieren</button>
-            <button class="toggle-btn" onclick="toggleForms()">← Anmelden</button>
+        <!-- ADMIN TAB -->
+        <div id="admin" class="tab-content">
+            <form onsubmit="handleAdminLogin(event)">
+                <div class="form-group">
+                    <label for="admin-pin">Admin-PIN</label>
+                    <input type="password" id="admin-pin" placeholder="PIN eingeben" required>
+                </div>
+                <button type="submit" class="btn-primary">Admin-Bereich öffnen</button>
+            </form>
         </div>
     </div>
 
     <script>
-        // Initialisiere localStorage mit Demo-Benutzern
-        function initializeUsers() {
+        // Initialisiere Demo-Daten beim ersten Laden
+        function initializeDemoData() {
             if (!localStorage.getItem('minibank_users')) {
-                const users = {
-                    'user1': { pin: '1234', balance: 50.00, created: new Date().toISOString() },
-                    'user2': { pin: '5678', balance: 150.00, created: new Date().toISOString() }
-                };
-                localStorage.setItem('minibank_users', JSON.stringify(users));
+                const demoUsers = [
+                    { username: 'user1', pin: '1234', balance: 50.00, credits: [] },
+                    { username: 'user2', pin: '5678', balance: 150.00, credits: [] }
+                ];
+                localStorage.setItem('minibank_users', JSON.stringify(demoUsers));
+            }
+            if (!localStorage.getItem('minibank_rates')) {
+                localStorage.setItem('minibank_rates', JSON.stringify({ rate1: 0.03, rate2: 0.15, rate3: 0.50 }));
             }
         }
 
-        // Formulare wechseln
-        function toggleForms() {
-            document.getElementById('loginForm').classList.toggle('hidden');
-            document.getElementById('registerForm').classList.toggle('hidden');
-            clearMessages();
+        initializeDemoData();
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+            clearMessage();
         }
 
-        // Nachricht anzeigen
-        function showMessage(type, text) {
-            const loginMsg = document.getElementById('loginMessage');
-            const regMsg = document.getElementById('registerMessage');
-            
-            if (document.getElementById('loginForm').classList.contains('hidden')) {
-                // Registration Form sichtbar
-                regMsg.className = `message ${type}`;
-                regMsg.textContent = text;
+        function showMessage(text, type) {
+            const msgEl = document.getElementById('message');
+            msgEl.textContent = text;
+            msgEl.className = `message ${type}`;
+        }
+
+        function clearMessage() {
+            document.getElementById('message').textContent = '';
+            document.getElementById('message').className = 'message';
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const pin = document.getElementById('login-pin').value;
+
+            const users = JSON.parse(localStorage.getItem('minibank_users') || '[]');
+            const user = users.find(u => u.username === username && u.pin === pin);
+
+            if (user) {
+                localStorage.setItem('minibank_currentUser', username);
+                showMessage('✅ Anmelden erfolgreich! Weiterleitend...', 'success');
+                setTimeout(() => window.location.href = 'dashboard.html', 1000);
             } else {
-                // Login Form sichtbar
-                loginMsg.className = `message ${type}`;
-                loginMsg.textContent = text;
+                showMessage('❌ Benutzername oder PIN falsch!', 'error');
             }
         }
 
-        function clearMessages() {
-            document.getElementById('loginMessage').className = 'message';
-            document.getElementById('registerMessage').className = 'message';
-        }
+        function handleRegister(event) {
+            event.preventDefault();
+            const username = document.getElementById('reg-username').value;
+            const pin = document.getElementById('reg-pin').value;
+            const pinConfirm = document.getElementById('reg-pin-confirm').value;
 
-        // REGISTRIERUNG
-        function handleRegister() {
-            const username = document.getElementById('regUsername').value.trim();
-            const pin = document.getElementById('regPin').value.trim();
-            const pin2 = document.getElementById('regPin2').value.trim();
-
-            // Validierung
-            if (!username || username.length < 3) {
-                showMessage('error', '❌ Benutzername: Mindestens 3 Zeichen');
+            if (username.length < 3) {
+                showMessage('❌ Benutzername muss mindestens 3 Zeichen lang sein!', 'error');
                 return;
             }
 
-            if (!pin || pin.length < 4 || !/^\d+$/.test(pin)) {
-                showMessage('error', '❌ PIN: Mindestens 4 Ziffern');
+            if (!/^\d{4,}$/.test(pin)) {
+                showMessage('❌ PIN muss mindestens 4 Ziffern lang sein!', 'error');
                 return;
             }
 
-            if (pin !== pin2) {
-                showMessage('error', '❌ PINs stimmen nicht überein');
+            if (pin !== pinConfirm) {
+                showMessage('❌ PINs stimmen nicht überein!', 'error');
                 return;
             }
 
-            // Benutzer existiert bereits?
-            const users = JSON.parse(localStorage.getItem('minibank_users') || '{}');
-            if (users[username]) {
-                showMessage('error', '❌ Benutzername existiert bereits');
+            const users = JSON.parse(localStorage.getItem('minibank_users') || '[]');
+            if (users.find(u => u.username === username)) {
+                showMessage('❌ Benutzer existiert bereits!', 'error');
                 return;
             }
 
-            // Neuen Benutzer erstellen
-            users[username] = {
-                pin: pin,
-                balance: 0.00,
-                created: new Date().toISOString()
-            };
-
+            users.push({ username, pin, balance: 0.00, credits: [] });
             localStorage.setItem('minibank_users', JSON.stringify(users));
-            showMessage('success', `✅ Erfolgreich registriert! Willkommen ${username}`);
-
-            // Formulare leeren
-            document.getElementById('regUsername').value = '';
-            document.getElementById('regPin').value = '';
-            document.getElementById('regPin2').value = '';
-
-            // Nach 2 Sekunden zum Login wechseln
-            setTimeout(() => {
-                toggleForms();
-            }, 2000);
+            showMessage('✅ Registrierung erfolgreich! Bitte melden Sie sich an.', 'success');
+            document.getElementById('reg-username').value = '';
+            document.getElementById('reg-pin').value = '';
+            document.getElementById('reg-pin-confirm').value = '';
         }
 
-        // ANMELDUNG
-        function handleLogin() {
-            const username = document.getElementById('loginUsername').value.trim();
-            const pin = document.getElementById('loginPin').value.trim();
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            const pin = document.getElementById('admin-pin').value;
 
-            if (!username || !pin) {
-                showMessage('error', '❌ Benutzername und PIN erforderlich');
-                return;
+            if (pin === '506715') {
+                localStorage.setItem('minibank_currentUser', 'admin');
+                window.location.href = 'admin.html';
+            } else {
+                showMessage('❌ Admin-PIN falsch!', 'error');
             }
-
-            const users = JSON.parse(localStorage.getItem('minibank_users') || '{}');
-
-            if (!users[username]) {
-                showMessage('error', '❌ Benutzer nicht gefunden');
-                return;
-            }
-
-            if (users[username].pin !== pin) {
-                showMessage('error', '❌ PIN ist falsch');
-                return;
-            }
-
-            // Login erfolgreich
-            showMessage('success', `✅ Angemeldet als ${username}!`);
-            localStorage.setItem('minibank_currentUser', username);
-
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1500);
         }
-
-        // Enter-Taste aktivieren
-        document.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                if (document.getElementById('loginForm').classList.contains('hidden')) {
-                    handleRegister();
-                } else {
-                    handleLogin();
-                }
-            }
-        });
-
-        // Beim Laden initialisieren
-        window.addEventListener('load', initializeUsers);
     </script>
 </body>
 </html>
