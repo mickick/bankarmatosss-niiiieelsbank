@@ -3,243 +3,324 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>niiiieelsbank- Komplett</title>
+    <title>MiniBank</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .container { background: white; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 100%; max-width: 500px; overflow: hidden; }
-        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; }
-        .content { padding: 25px; }
-        .view { display: none; }
-        .active { display: block; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
-        input { width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; margin-bottom: 10px; }
-        button { width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-bottom: 8px; }
-        button:hover { opacity: 0.9; }
-        .info-box { background: #f0f4ff; border-left: 4px solid #667eea; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; }
-        .account-info { background: #f9f9f9; padding: 15px; border-radius: 8px; text-align: center; border: 2px solid #e0e0e0; margin-bottom: 15px; }
-        .amount { font-weight: 700; color: #667eea; font-size: 24px; }
-        .status { padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 13px; font-weight: 600; }
-        .success { background: #d4edda; color: #155724; }
-        .pending { background: #fff3cd; color: #856404; }
-        .btn-secondary { background: #6c757d; }
-        .btn-danger { background: #dc3545; }
-        .admin-section { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ddd; }
-        hr { margin: 15px 0; border: 0; border-top: 1px solid #eee; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .toggle-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            margin-top: 20px;
+        }
+
+        .toggle-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="logo">🏦 MiniBank</div>
 
-<div class="container">
-    <div class="header">
-        <h1>🏦 niiiieelsBank</h1>
-        <p id="userRole"></p>
-    </div>
-    <div class="content">
-        <!-- LOGIN -->
-        <div id="login-view" class="view active">
+        <!-- LOGIN FORM -->
+        <div id="loginForm">
             <h2>Anmelden</h2>
-            <div class="form-group" style="margin-top:20px;">
-                <label>PIN eingeben:</label>
-                <input type="password" id="pinInput" placeholder="####">
-                <button onclick="login()">Anmelden</button>
+            <div id="loginMessage" class="message"></div>
+            
+            <div class="form-group">
+                <label for="loginUsername">Benutzername</label>
+                <input type="text" id="loginUsername" placeholder="z.B. john123">
             </div>
-            <div class="info-box">📌 Test-Nutzer PIN: 123456</div>
+
+            <div class="form-group">
+                <label for="loginPin">PIN (4+ Ziffern)</label>
+                <input type="password" id="loginPin" placeholder="z.B. 1234">
+            </div>
+
+            <button onclick="handleLogin()">Anmelden</button>
+            <button class="toggle-btn" onclick="toggleForms()">Neu registrieren →</button>
         </div>
 
-        <!-- USER -->
-        <div id="user-view" class="view">
-            <div class="account-info">
-                <p>Mein Kontostand</p>
-                <p class="amount" id="userBalance">0.00 €</p>
-            </div>
-            <div id="contractStatus"></div>
-            <div class="info-box">
-                <strong>Zinssätze:</strong><br>
-                bis 5€: <span id="r1">0.03</span>€ | bis 100€: <span id="r2">0.15</span>€ | >100€: Sondervertrag
-            </div>
+        <!-- REGISTRATION FORM -->
+        <div id="registerForm" class="hidden">
+            <h2>Registrieren</h2>
+            <div id="registerMessage" class="message"></div>
+            
             <div class="form-group">
-                <label>💰 Betrag eingeben:</label>
-                <input type="number" id="amountInput" step="0.01">
-                <button onclick="updateBalance('deposit')">Einzahlen</button>
-                <button class="btn-secondary" onclick="updateBalance('loan')">Kredit aufnehmen</button>
+                <label for="regUsername">Benutzername</label>
+                <input type="text" id="regUsername" placeholder="z.B. john123">
+                <div class="info-text">Mindestens 3 Zeichen</div>
             </div>
-            <hr>
-            <div class="form-group">
-                <label>💸 Überweisen:</label>
-                <input type="password" id="targetPin" placeholder="PIN Empfänger">
-                <input type="number" id="transferAmount" step="0.01" placeholder="Betrag €">
-                <button onclick="transfer()">Geld senden</button>
-            </div>
-            <button onclick="calculateInterest()">💹 Zinsen gutschreiben</button>
-            <button class="btn-danger" onclick="logout()">Abmelden</button>
-        </div>
 
-        <!-- ADMIN -->
-        <div id="admin-view" class="view">
-            <h2>Admin-Panel</h2>
-            <div class="admin-section">
-                <h3>⚙️ Zinsen</h3>
-                <label>Rate 1 (bis 5€):</label>
-                <input type="number" id="adminRate1" step="0.01">
-                <label>Rate 2 (bis 100€):</label>
-                <input type="number" id="adminRate2" step="0.01">
-                <button onclick="updateRates()">Speichern</button>
+            <div class="form-group">
+                <label for="regPin">PIN</label>
+                <input type="password" id="regPin" placeholder="z.B. 1234">
+                <div class="info-text">Mindestens 4 Ziffern</div>
             </div>
-            <div class="admin-section">
-                <h3>🔐 PIN ändern</h3>
-                <input type="password" id="newPin" placeholder="Neue Admin-PIN">
-                <button onclick="changeAdminPin()">PIN ändern</button>
+
+            <div class="form-group">
+                <label for="regPin2">PIN wiederholen</label>
+                <input type="password" id="regPin2" placeholder="PIN erneut eingeben">
             </div>
-            <div id="contractSection" class="admin-section" style="display:none;">
-                <h3>📋 Sonderverträge</h3>
-                <div id="requestList"></div>
-            </div>
-            <button class="btn-danger" onclick="logout()">Abmelden</button>
+
+            <button onclick="handleRegister()">Registrieren</button>
+            <button class="toggle-btn" onclick="toggleForms()">← Anmelden</button>
         </div>
     </div>
-</div>
 
-<script>
-    let currentUser = null;
-
-    function init() {
-        if (!localStorage.getItem('bankData')) {
-            localStorage.setItem('bankData', JSON.stringify({
-                users: [{id: 1, pin: '123456', balance: 10.0, contract: 'none'}, {id: 2, pin: '123457', balance: 0.0, contract: 'none'}],
-                adminPin: '506715', rate1: 0.03, rate2: 0.15
-            }));
+    <script>
+        // Initialisiere localStorage mit Demo-Benutzern
+        function initializeUsers() {
+            if (!localStorage.getItem('minibank_users')) {
+                const users = {
+                    'user1': { pin: '1234', balance: 50.00, created: new Date().toISOString() },
+                    'user2': { pin: '5678', balance: 150.00, created: new Date().toISOString() }
+                };
+                localStorage.setItem('minibank_users', JSON.stringify(users));
+            }
         }
-    }
 
-    const getData = () => JSON.parse(localStorage.getItem('bankData'));
-    const saveData = (d) => localStorage.setItem('bankData', JSON.stringify(d));
-
-    function login() {
-        const pin = document.getElementById('pinInput').value;
-        const data = getData();
-        if (pin === data.adminPin) {
-            showView('admin-view');
-            document.getElementById('userRole').textContent = '🔒 Administrator';
-            updateAdmin();
-        } else {
-            const user = data.users.find(u => u.pin === pin);
-            if (user) {
-                currentUser = user;
-                showView('user-view');
-                document.getElementById('userRole').textContent = '👤 Kunde';
-                updateUser();
-            } else alert('PIN falsch!');
+        // Formulare wechseln
+        function toggleForms() {
+            document.getElementById('loginForm').classList.toggle('hidden');
+            document.getElementById('registerForm').classList.toggle('hidden');
+            clearMessages();
         }
-    }
 
-    function showView(id) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
-
-    function logout() {
-        currentUser = null;
-        document.getElementById('userRole').textContent = '';
-        document.getElementById('pinInput').value = '';
-        showView('login-view');
-    }
-
-    function updateUser() {
-        const data = getData();
-        const user = data.users.find(u => u.pin === currentUser.pin);
-        document.getElementById('userBalance').textContent = user.balance.toFixed(2) + ' €';
-        document.getElementById('r1').textContent = data.rate1;
-        document.getElementById('r2').textContent = data.rate2;
-        const statusDiv = document.getElementById('contractStatus');
-        statusDiv.innerHTML = '';
-        if (user.balance > 100 && user.contract === 'none') {
-            statusDiv.innerHTML = '<div class="status pending">⚠️ Stand > 100€. Bitte Sondervertrag anfordern!</div>';
-        } else if (user.contract === 'approved') {
-            statusDiv.innerHTML = '<div class="status success">✅ Sondervertrag aktiv.</div>';
+        // Nachricht anzeigen
+        function showMessage(type, text) {
+            const loginMsg = document.getElementById('loginMessage');
+            const regMsg = document.getElementById('registerMessage');
+            
+            if (document.getElementById('loginForm').classList.contains('hidden')) {
+                // Registration Form sichtbar
+                regMsg.className = `message ${type}`;
+                regMsg.textContent = text;
+            } else {
+                // Login Form sichtbar
+                loginMsg.className = `message ${type}`;
+                loginMsg.textContent = text;
+            }
         }
-    }
 
-    function updateBalance(type) {
-        const amt = parseFloat(document.getElementById('amountInput').value);
-        if (isNaN(amt) || amt <= 0) return alert('Ungültiger Betrag');
-        const data = getData();
-        const user = data.users.find(u => u.pin === currentUser.pin);
-        user.balance += amt;
-        saveData(data);
-        updateUser();
-        document.getElementById('amountInput').value = '';
-        if(type === 'loan') alert('Kredit gutgeschrieben!');
-    }
+        function clearMessages() {
+            document.getElementById('loginMessage').className = 'message';
+            document.getElementById('registerMessage').className = 'message';
+        }
 
-    function transfer() {
-        const tPin = document.getElementById('targetPin').value;
-        const amt = parseFloat(document.getElementById('transferAmount').value);
-        const data = getData();
-        const sender = data.users.find(u => u.pin === currentUser.pin);
-        const rec = data.users.find(u => u.pin === tPin);
-        if (!rec || isNaN(amt) || sender.balance < amt) return alert('Überweisung fehlgeschlagen!');
-        sender.balance -= amt;
-        rec.balance += amt;
-        saveData(data);
-        updateUser();
-        alert('Erfolgreich gesendet!');
-    }
+        // REGISTRIERUNG
+        function handleRegister() {
+            const username = document.getElementById('regUsername').value.trim();
+            const pin = document.getElementById('regPin').value.trim();
+            const pin2 = document.getElementById('regPin2').value.trim();
 
-    function calculateInterest() {
-        const data = getData();
-        const user = data.users.find(u => u.pin === currentUser.pin);
-        let int = 0;
-        if (user.balance > 0 && user.balance <= 5) int = data.rate1;
-        else if (user.balance > 5 && user.balance <= 100) int = data.rate2;
-        else if (user.balance > 100 && user.contract === 'approved') int = 0.50;
-        else if (user.balance > 100) return alert('Kein Sondervertrag vorhanden!');
-        user.balance += int;
-        saveData(data);
-        updateUser();
-        alert('Zinsen: ' + int.toFixed(2) + '€ gutgeschrieben!');
-    }
+            // Validierung
+            if (!username || username.length < 3) {
+                showMessage('error', '❌ Benutzername: Mindestens 3 Zeichen');
+                return;
+            }
 
-    function updateAdmin() {
-        const data = getData();
-        document.getElementById('adminRate1').value = data.rate1;
-        document.getElementById('adminRate2').value = data.rate2;
-        const list = document.getElementById('requestList');
-        list.innerHTML = '';
-        const needs = data.users.filter(u => u.balance > 100 && u.contract === 'none');
-        if (needs.length > 0) {
-            document.getElementById('contractSection').style.display = 'block';
-            needs.forEach(u => {
-                list.innerHTML += `<div class="info-box">User ${u.id}: ${u.balance}€ <button onclick="approve(${u.id})">OK</button></div>`;
-            });
-        } else document.getElementById('contractSection').style.display = 'none';
-    }
+            if (!pin || pin.length < 4 || !/^\d+$/.test(pin)) {
+                showMessage('error', '❌ PIN: Mindestens 4 Ziffern');
+                return;
+            }
 
-    function updateRates() {
-        const data = getData();
-        data.rate1 = parseFloat(document.getElementById('adminRate1').value);
-        data.rate2 = parseFloat(document.getElementById('adminRate2').value);
-        saveData(data);
-        alert('Zinsen aktualisiert!');
-    }
+            if (pin !== pin2) {
+                showMessage('error', '❌ PINs stimmen nicht überein');
+                return;
+            }
 
-    function changeAdminPin() {
-        const data = getData();
-        data.adminPin = document.getElementById('newPin').value;
-        saveData(data);
-        alert('Admin-PIN geändert!');
-    }
+            // Benutzer existiert bereits?
+            const users = JSON.parse(localStorage.getItem('minibank_users') || '{}');
+            if (users[username]) {
+                showMessage('error', '❌ Benutzername existiert bereits');
+                return;
+            }
 
-    function approve(id) {
-        const data = getData();
-        const user = data.users.find(u => u.id === id);
-        user.contract = 'approved';
-        saveData(data);
-        updateAdmin();
-    }
+            // Neuen Benutzer erstellen
+            users[username] = {
+                pin: pin,
+                balance: 0.00,
+                created: new Date().toISOString()
+            };
 
-    init();
-</script>
+            localStorage.setItem('minibank_users', JSON.stringify(users));
+            showMessage('success', `✅ Erfolgreich registriert! Willkommen ${username}`);
+
+            // Formulare leeren
+            document.getElementById('regUsername').value = '';
+            document.getElementById('regPin').value = '';
+            document.getElementById('regPin2').value = '';
+
+            // Nach 2 Sekunden zum Login wechseln
+            setTimeout(() => {
+                toggleForms();
+            }, 2000);
+        }
+
+        // ANMELDUNG
+        function handleLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const pin = document.getElementById('loginPin').value.trim();
+
+            if (!username || !pin) {
+                showMessage('error', '❌ Benutzername und PIN erforderlich');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('minibank_users') || '{}');
+
+            if (!users[username]) {
+                showMessage('error', '❌ Benutzer nicht gefunden');
+                return;
+            }
+
+            if (users[username].pin !== pin) {
+                showMessage('error', '❌ PIN ist falsch');
+                return;
+            }
+
+            // Login erfolgreich
+            showMessage('success', `✅ Angemeldet als ${username}!`);
+            localStorage.setItem('minibank_currentUser', username);
+
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        }
+
+        // Enter-Taste aktivieren
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                if (document.getElementById('loginForm').classList.contains('hidden')) {
+                    handleRegister();
+                } else {
+                    handleLogin();
+                }
+            }
+        });
+
+        // Beim Laden initialisieren
+        window.addEventListener('load', initializeUsers);
+    </script>
 </body>
 </html>
