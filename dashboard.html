@@ -167,4 +167,284 @@
         .credit-item p {
             margin: 5px 0;
             font-size: 14px;
-        
+        }
+        .credit-item strong {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 MiniBank</h1>
+            <button class="logout-btn" onclick="logout()">Abmelden</button>
+        </div>
+
+        <div class="balance-box">
+            <div class="balance-label">Dein Kontostand</div>
+            <div class="balance-amount"><span id="balance">0.00</span> €</div>
+        </div>
+
+        <div id="message"></div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('deposit')">Einzahlung</button>
+            <button class="tab-button" onclick="switchTab('withdrawal')">Auszahlung</button>
+            <button class="tab-button" onclick="switchTab('transfer')">Überweisung</button>
+            <button class="tab-button" onclick="switchTab('credit')">Kredit</button>
+        </div>
+
+        <!-- DEPOSIT TAB -->
+        <div id="deposit" class="tab-content active">
+            <form onsubmit="handleDeposit(event)">
+                <div class="form-group">
+                    <label for="deposit-amount">Betrag (€)</label>
+                    <input type="number" id="deposit-amount" step="0.01" min="0.01" required>
+                </div>
+                <button type="submit" class="btn-submit">Einzahlung durchführen</button>
+            </form>
+        </div>
+
+        <!-- WITHDRAWAL TAB -->
+        <div id="withdrawal" class="tab-content">
+            <form onsubmit="handleWithdrawal(event)">
+                <div class="form-group">
+                    <label for="withdrawal-amount">Betrag (€)</label>
+                    <input type="number" id="withdrawal-amount" step="0.01" min="0.01" required>
+                </div>
+                <button type="submit" class="btn-submit">Auszahlung durchführen</button>
+            </form>
+        </div>
+
+        <!-- TRANSFER TAB -->
+        <div id="transfer" class="tab-content">
+            <form onsubmit="handleTransfer(event)">
+                <div class="form-group">
+                    <label for="transfer-to">Empfänger (Benutzername)</label>
+                    <input type="text" id="transfer-to" required>
+                </div>
+                <div class="form-group">
+                    <label for="transfer-amount">Betrag (€)</label>
+                    <input type="number" id="transfer-amount" step="0.01" min="0.01" required>
+                </div>
+                <button type="submit" class="btn-submit">Überweisung durchführen</button>
+            </form>
+        </div>
+
+        <!-- CREDIT TAB -->
+        <div id="credit" class="tab-content">
+            <form onsubmit="handleCredit(event)">
+                <div class="form-group">
+                    <label for="credit-amount">Kreditbetrag (€)</label>
+                    <input type="number" id="credit-amount" step="0.01" min="0.01" required>
+                </div>
+                <div class="form-group" id="contract-group" style="display:none;">
+                    <label for="credit-contract">Spezialvertrag erforderlich!</label>
+                    <input type="text" id="credit-contract" placeholder="Vertragsnummer" disabled>
+                </div>
+                <button type="submit" class="btn-submit">Kredit beantragen</button>
+            </form>
+
+            <h3 style="margin-top: 30px; margin-bottom: 15px;">Aktive Kredite</h3>
+            <div class="credit-list" id="credit-list">
+                <p style="color: #999;">Keine aktiven Kredite</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            currentUser = localStorage.getItem('minibank_currentUser');
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+            loadUserData();
+            loadCredits();
+        });
+
+        function loadUserData() {
+            const users = JSON.parse(localStorage.getItem('minibank_users') || '[]');
+            const user = users.find(u => u.username === currentUser);
+            if (user) {
+                document.getElementById('balance').textContent = user.balance.toFixed(2);
+            }
+        }
+
+        function loadCredits() {
+            const users = JSON.parse(localStorage.getItem('minibank_users') || '[]');
+            const user = users.find(u => u.username === currentUser);
+            
+            if (!user || !user.credits || user.credits.length === 0) {
+                document.getElementById('credit-list').innerHTML = '<p style="color: #999;">Keine aktiven Kredite</p>';
+                return;
+            }
+
+            let html = '';
+            user.credits.forEach((credit, index) => {
+                const status = credit.status === 'pending' ? '⏳ Ausstehend' : 
+                               credit.status === 'approved' ? '✅ Genehmigt' : '❌ Abgelehnt';
+                html += `
+                    <div class="credit-item">
+                        <p><strong>Kreditbetrag:</strong> ${credit.amount.toFixed(2)} €</p>
+                        <p><strong>Zinsen:</strong> ${credit.interest.toFixed(2)} €</p>
+                        <p><strong>Rückzahlung gesamt:</strong> ${(credit.amount + credit.interest).toFixed(2)} €</p>
+                        <p><strong>Status:</strong> ${status}</p>
+                    </div>
+                `;
+            });
+            document.getElementById('credit-list').innerHTML = html;
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+            clearMessage();
+
+            if (tab === 'credit') {
+                loadCredits();
+            }
+        }
+
+        function showMessage(text, type) {
+            const msgEl = document.getElementById('message');
+            msgEl.textContent = text;
+            msgEl.className = `message ${type}`;
+        }
+
+        function clearMessage() {
+            document.getElementById('message').textContent = '';
+            document.getElementById('message').className = 'message';
+        }
+
+        function handleDeposit(event) {
+            event.preventDefault();
+            const amount = parseFloat(document.getElementById('deposit-amount').value);
+
+            if (amount <= 0) {
+                showMessage('❌ Betrag muss größer als 0 sein!', 'error');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('minibank_users') || '[]');
+            const user = users.find(u => u.username === currentUser);
+            
+            user.balance += amount;
+            localStorage.setItem('minibank_users', JSON.stringify(users));
+            
+            document.getElementById('deposit-amount').value = '';
+            loadUserData();
+            showMessage(`✅ ${amount.toFixed(2)} € eingezahlt!`, 'success');
+        }
+
+        function handleWithdrawal(event) {
+            event.preventDefault();
+            const amount = parseFloat(document.getElementById('withdrawal-amount').value);
+
+            if (amount <= 0) {
+                showMessage('❌ Betrag muss größer als 0 sein!', 'error');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('minibank_users') || '[]');
+            const user = users.find(u => u.username === currentUser);
+            
+            if (user.balance < amount) {
+                showMessage('❌ Nicht genug Guthaben!', 'error');
+                return;
+            }
+
+            user.balance -= amount;
+            localStorage.setItem('minibank_users', JSON.stringify(users));
+            
+            document.getElementById('withdrawal-amount').value = '';
+            loadUserData();
+            showMessage(`✅ ${amount.toFixed(2)} € ausgezahlt!`, 'success');
+        }
+
+        function handleTransfer(event) {
+            event.preventDefault();
+            const to = document.getElementById('transfer-to').value;
+            const amount = parseFloat(document.getElementById('transfer-amount').value);
+
+            if (amount <= 0) {
+                showMessage('❌ Betrag muss größer als 0 sein!', 'error');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('minibank_users') || '[]');
+            const sender = users.find(u => u.username === currentUser);
+            const receiver = users.find(u => u.username === to);
+
+            if (!receiver) {
+                showMessage('❌ Empfänger existiert nicht!', 'error');
+                return;
+            }
+
+            if (sender.balance < amount) {
+                showMessage('❌ Nicht genug Guthaben!', 'error');
+                return;
+            }
+
+            sender.balance -= amount;
+            receiver.balance += amount;
+            localStorage.setItem('minibank_users', JSON.stringify(users));
+
+            document.getElementById('transfer-to').value = '';
+            document.getElementById('transfer-amount').value = '';
+            loadUserData();
+            showMessage(`✅ ${amount.toFixed(2)} € an ${to} überwiesen!`, 'success');
+        }
+
+        function handleCredit(event) {
+            event.preventDefault();
+            const amount = parseFloat(document.getElementById('credit-amount').value);
+            const rates = JSON.parse(localStorage.getItem('minibank_rates') || '{"rate1":0.03,"rate2":0.15,"rate3":0.50}');
+
+            if (amount <= 0) {
+                showMessage('❌ Kreditbetrag muss größer als 0 sein!', 'error');
+                return;
+            }
+
+            let interest = 0;
+
+            if (amount > 100) {
+                showMessage('❌ Kredite über 100 € benötigen Spezialvertrag! Kontaktiere den Admin.', 'warning');
+                return;
+            } else if (amount > 5) {
+                interest = amount * rates.rate2;
+            } else {
+                interest = amount * rates.rate1;
+            }
+
+            const users = JSON.parse(localStorage.getItem('minibank_users') || '[]');
+            const user = users.find(u => u.username === currentUser);
+
+            if (!user.credits) {
+                user.credits = [];
+            }
+
+            user.credits.push({
+                amount: amount,
+                interest: interest,
+                status: 'pending',
+                date: new Date().toLocaleDateString('de-DE')
+            });
+
+            localStorage.setItem('minibank_users', JSON.stringify(users));
+            document.getElementById('credit-amount').value = '';
+            loadCredits();
+            showMessage(`✅ Kreditantrag eingereicht! Zinsen: ${interest.toFixed(2)} €`, 'success');
+        }
+
+        function logout() {
+            localStorage.removeItem('minibank_currentUser');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
