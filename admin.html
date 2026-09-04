@@ -10,435 +10,351 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
         }
+
         .container {
-            max-width: 800px;
-            margin: 0 auto;
             background: white;
             border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 900px;
+            width: 100%;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 15px;
         }
-        h1 {
-            color: #333;
-            font-size: 28px;
-        }
+
         .logout-btn {
-            background: #e74c3c;
+            background-color: #e74c3c;
             color: white;
             border: none;
-            padding: 8px 15px;
+            padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 14px;
             font-weight: bold;
         }
+
         .logout-btn:hover {
-            background: #c0392b;
+            background-color: #c0392b;
         }
-        .tabs {
+
+        .nav-buttons {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
             margin-bottom: 30px;
         }
-        .tab-button {
+
+        .nav-btn {
             padding: 12px;
-            border: 2px solid #ddd;
+            border: 1px solid #ddd;
             background: white;
-            cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
             font-weight: bold;
-            transition: all 0.3s;
-            font-size: 14px;
+            transition: all 0.3s ease;
         }
-        .tab-button.active {
-            border-color: #667eea;
-            background: #667eea;
+
+        .nav-btn.active {
+            background-color: #5469d4;
             color: white;
+            border-color: #5469d4;
         }
-        .tab-content {
-            display: none;
+
+        .nav-btn:hover {
+            background-color: #f5f5f5;
         }
-        .tab-content.active {
-            display: block;
+
+        .nav-btn.active:hover {
+            background-color: #5469d4;
         }
+
+        .content {
+            background: #f9f9f9;
+            border-radius: 5px;
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        .content h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #5469d4;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
             color: #333;
             font-weight: bold;
         }
-        input, select {
+
+        input, textarea {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 14px;
         }
-        input:focus, select:focus {
+
+        input:focus, textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #5469d4;
+            box-shadow: 0 0 5px rgba(84, 105, 212, 0.3);
         }
-        .btn-submit {
-            width: 100%;
-            padding: 12px;
-            background: #667eea;
+
+        .submit-btn {
+            background-color: #5469d4;
             color: white;
+            padding: 12px 20px;
             border: none;
             border-radius: 5px;
-            font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
-        }
-        .btn-submit:hover {
-            background: #5568d3;
-        }
-        .message {
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-        .user-list {
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 5px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .user-item {
-            background: white;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-left: 4px solid #667eea;
-            border-radius: 3px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .user-info {
-            flex: 1;
-        }
-        .user-info p {
-            margin: 5px 0;
+            font-weight: bold;
             font-size: 14px;
         }
-        .user-info strong {
-            color: #667eea;
+
+        .submit-btn:hover {
+            background-color: #4a5ac4;
         }
-        .user-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .btn-approve, .btn-reject {
-            padding: 8px 12px;
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            padding: 6px 12px;
             border: none;
-            border-radius: 5px;
+            border-radius: 3px;
             cursor: pointer;
-            font-weight: bold;
             font-size: 12px;
         }
-        .btn-approve {
-            background: #27ae60;
-            color: white;
+
+        .delete-btn:hover {
+            background-color: #c0392b;
         }
-        .btn-approve:hover {
-            background: #229954;
-        }
-        .btn-reject {
-            background: #e74c3c;
-            color: white;
-        }
-        .btn-reject:hover {
-            background: #c0392b;
-        }
-        .rate-display {
-            background: #f0f0f0;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-        .rate-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
-        }
-        .rate-item:last-child {
-            border-bottom: none;
-        }
-        .rate-label {
-            font-weight: bold;
-            color: #333;
-        }
-        .rate-value {
-            color: #667eea;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .credit-item {
-            background: #f9f9f9;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-left: 4px solid #667eea;
-            border-radius: 3px;
-        }
-        .credit-item p {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-        .credit-item strong {
-            color: #667eea;
+
+        @media (max-width: 768px) {
+            .nav-buttons {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>⚙️ Admin Panel</h1>
+            <h1>⚙ Admin Panel</h1>
             <button class="logout-btn" onclick="logout()">Abmelden</button>
         </div>
 
-        <div id="message"></div>
-
-        <div class="tabs">
-            <button class="tab-button active" onclick="switchTab('users')">Benutzer</button>
-            <button class="tab-button" onclick="switchTab('rates')">Zinsätze</button>
-            <button class="tab-button" onclick="switchTab('credits')">Kredite</button>
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="showSection('users')">Benutzer</button>
+            <button class="nav-btn" onclick="showSection('rates')">Zinsätze</button>
+            <button class="nav-btn" onclick="showSection('credits')">Kredite</button>
         </div>
 
-        <!-- USERS TAB -->
-        <div id="users" class="tab-content active">
-            <h2 style="margin-bottom: 20px;">Benutzer verwalten</h2>
-            <div class="user-list" id="user-list">
-                <p style="color: #999;">Lädt...</p>
-            </div>
-        </div>
-
-        <!-- RATES TAB -->
-        <div id="rates" class="tab-content">
-            <h2 style="margin-bottom: 20px;">Zinsätze ändern</h2>
-            
-            <div class="rate-display" id="rate-display">
-                <div class="rate-item">
-                    <span class="rate-label">Zinssatz bis 5 €:</span>
-                    <span class="rate-value" id="display-rate1">0.03</span>
-                </div>
-                <div class="rate-item">
-                    <span class="rate-label">Zinssatz bis 100 €:</span>
-                    <span class="rate-value" id="display-rate2">0.15</span>
-                </div>
-                <div class="rate-item">
-                    <span class="rate-label">Zinssatz über 100 € (spezial):</span>
-                    <span class="rate-value" id="display-rate3">0.50</span>
-                </div>
+        <div class="content">
+            <!-- Benutzer verwalten -->
+            <div id="users-section">
+                <h2>Benutzer verwalten</h2>
+                <div id="users-list" class="loading">Lädt...</div>
             </div>
 
-            <form onsubmit="handleRateUpdate(event)">
+            <!-- Zinsätze -->
+            <div id="rates-section" style="display:none;">
+                <h2>Zinsätze verwalten</h2>
                 <div class="form-group">
-                    <label for="rate1">Zinssatz bis 5 € (€)</label>
-                    <input type="number" id="rate1" step="0.01" min="0" required>
+                    <label for="savings-rate">Sparzins (%)</label>
+                    <input type="number" id="savings-rate" step="0.01" placeholder="z.B. 2.5">
                 </div>
                 <div class="form-group">
-                    <label for="rate2">Zinssatz bis 100 € (€)</label>
-                    <input type="number" id="rate2" step="0.01" min="0" required>
+                    <label for="credit-rate">Kreditzins (%)</label>
+                    <input type="number" id="credit-rate" step="0.01" placeholder="z.B. 5.0">
                 </div>
-                <div class="form-group">
-                    <label for="rate3">Zinssatz über 100 € (€)</label>
-                    <input type="number" id="rate3" step="0.01" min="0" required>
-                </div>
-                <button type="submit" class="btn-submit">Zinsätze aktualisieren</button>
-            </form>
-        </div>
+                <button class="submit-btn" onclick="saveRates()">Zinsätze speichern</button>
+            </div>
 
-        <!-- CREDITS TAB -->
-        <div id="credits" class="tab-content">
-            <h2 style="margin-bottom: 20px;">Kreditanträge genehmigen</h2>
-            <div id="credits-list" style="background: #f9f9f9; padding: 15px; border-radius: 5px;">
-                <p style="color: #999;">Lädt...</p>
+            <!-- Kredite -->
+            <div id="credits-section" style="display:none;">
+                <h2>Kredite verwalten</h2>
+                <div id="credits-list" class="loading">Lädt...</div>
             </div>
         </div>
     </div>
 
     <script>
-        let currentUser = null;
+        // Navigation zwischen Sektionen
+        function showSection(section) {
+            // Alle Sektionen verstecken
+            document.getElementById('users-section').style.display = 'none';
+            document.getElementById('rates-section').style.display = 'none';
+            document.getElementById('credits-section').style.display = 'none';
 
-        window.addEventListener('DOMContentLoaded', () => {
-            currentUser = localStorage.getItem('minibank_currentUser');
-            if (currentUser !== 'admin') {
-                window.location.href = 'index.html';
-                return;
-            }
-            loadUsers();
-            loadRates();
-            loadCredits();
-        });
-
-        function loadUsers() {
-            const users = JSON.parse(localStorage.getItem('minibank_users') || '[]');
-            const filteredUsers = users.filter(u => u.username !== 'admin');
-
-            if (filteredUsers.length === 0) {
-                document.getElementById('user-list').innerHTML = '<p style="color: #999;">Keine Benutzer vorhanden</p>';
-                return;
-            }
-
-            let html = '';
-            filteredUsers.forEach(user => {
-                html += `
-                    <div class="user-item">
-                        <div class="user-info">
-                            <p><strong>Benutzername:</strong> ${user.username}</p>
-                            <p><strong>Kontostand:</strong> ${user.balance.toFixed(2)} €</p>
-                        </div>
-                    </div>
-                `;
-            });
-            document.getElementById('user-list').innerHTML = html;
-        }
-
-        function loadRates() {
-            const rates = JSON.parse(localStorage.getItem('minibank_rates') || '{"rate1":0.03,"rate2":0.15,"rate3":0.50}');
-            
-            document.getElementById('rate1').value = rates.rate1;
-            document.getElementById('rate2').value = rates.rate2;
-            document.getElementById('rate3').value = rates.rate3;
-
-            document.getElementById('display-rate1').textContent = rates.rate1.toFixed(2);
-            document.getElementById('display-rate2').textContent = rates.rate2.toFixed(2);
-            document.getElementById('display-rate3').textContent = rates.rate3.toFixed(2);
-        }
-
-        function loadCredits() {
-            const users = JSON.parse(localStorage.getItem('minibank_users') || '[]');
-            let credits = [];
-
-            users.forEach(user => {
-                if (user.credits && user.credits.length > 0) {
-                    user.credits.forEach((credit, index) => {
-                        credits.push({
-                            username: user.username,
-                            creditIndex: index,
-                            ...credit
-                        });
-                    });
-                }
+            // Alle Buttons deaktivieren
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
             });
 
-            if (credits.length === 0) {
-                document.getElementById('credits-list').innerHTML = '<p style="color: #999;">Keine Kreditanträge</p>';
-                return;
-            }
+            // Gewählte Sektion anzeigen
+            document.getElementById(section + '-section').style.display = 'block';
 
-            let html = '';
-            credits.forEach(credit => {
-                const total = (credit.amount + credit.interest).toFixed(2);
-                html += `
-                    <div class="credit-item">
-                        <p><strong>Benutzer:</strong> ${credit.username}</p>
-                        <p><strong>Kreditbetrag:</strong> ${credit.amount.toFixed(2)} €</p>
-                        <p><strong>Zinsen:</strong> ${credit.interest.toFixed(2)} €</p>
-                        <p><strong>Gesamtrückzahlung:</strong> ${total} €</p>
-                        <p><strong>Status:</strong> ${credit.status === 'pending' ? '⏳ Ausstehend' : credit.status === 'approved' ? '✅ Genehmigt' : '❌ Abgelehnt'}</p>
-                        ${credit.status === 'pending' ? `
-                            <div style="margin-top: 10px; display: flex; gap: 10px;">
-                                <button class="btn-approve" onclick="approveCredit('${credit.username}', ${credit.creditIndex})">Genehmigen</button>
-                                <button class="btn-reject" onclick="rejectCredit('${credit.username}', ${credit.creditIndex})">Ablehnen</button>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            });
-            document.getElementById('credits-list').innerHTML = html;
-        }
-
-        function handleRateUpdate(event) {
-            event.preventDefault();
-            const rate1 = parseFloat(document.getElementById('rate1').value);
-            const rate2 = parseFloat(document.getElementById('rate2').value);
-            const rate3 = parseFloat(document.getElementById('rate3').value);
-
-            if (rate1 < 0 || rate2 < 0 || rate3 < 0) {
-                showMessage('❌ Zinsätze können nicht negativ sein!', 'error');
-                return;
-            }
-
-            const rates = { rate1, rate2, rate3 };
-            localStorage.setItem('minibank_rates', JSON.stringify(rates));
-            
-            loadRates();
-            showMessage('✅ Zinsätze aktualisiert!', 'success');
-        }
-
-        function approveCredit(username, creditIndex) {
-            const users = JSON.parse(localStorage.getItem('minibank_users') || '[]');
-            const user = users.find(u => u.username === username);
-
-            if (user && user.credits && user.credits[creditIndex]) {
-                user.credits[creditIndex].status = 'approved';
-                user.balance += user.credits[creditIndex].amount;
-                localStorage.setItem('minibank_users', JSON.stringify(users));
-                loadCredits();
-                showMessage(`✅ Kredit für ${username} genehmigt!`, 'success');
-            }
-        }
-
-        function rejectCredit(username, creditIndex) {
-            const users = JSON.parse(localStorage.getItem('minibank_users') || '[]');
-            const user = users.find(u => u.username === username);
-
-            if (user && user.credits && user.credits[creditIndex]) {
-                user.credits[creditIndex].status = 'rejected';
-                localStorage.setItem('minibank_users', JSON.stringify(users));
-                loadCredits();
-                showMessage(`❌ Kredit für ${username} abgelehnt!`, 'error');
-            }
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
-            document.getElementById(tab).classList.add('active');
+            // Gewählten Button aktivieren
             event.target.classList.add('active');
-            clearMessage();
 
-            if (tab === 'users') loadUsers();
-            if (tab === 'rates') loadRates();
-            if (tab === 'credits') loadCredits();
+            // Daten laden
+            if (section === 'users') {
+                loadUsers();
+            } else if (section === 'credits') {
+                loadCredits();
+            }
         }
 
-        function showMessage(text, type) {
-            const msgEl = document.getElementById('message');
-            msgEl.textContent = text;
-            msgEl
+        // Benutzer laden
+        function loadUsers() {
+            const usersList = document.getElementById('users-list');
+            usersList.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Benutzername</th>
+                            <th>Kontostand (€)</th>
+                            <th>Aktion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Benutzer 1</td>
+                            <td>1.234,50 €</td>
+                            <td><button class="delete-btn" onclick="deleteUser('Benutzer 1')">Löschen</button></td>
+                        </tr>
+                        <tr>
+                            <td>Benutzer 2</td>
+                            <td>567,80 €</td>
+                            <td><button class="delete-btn" onclick="deleteUser('Benutzer 2')">Löschen</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+        }
 
+        // Kredite laden
+        function loadCredits() {
+            const creditsList = document.getElementById('credits-list');
+            creditsList.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Benutzer</th>
+                            <th>Kreditbetrag (€)</th>
+                            <th>Zinssatz (%)</th>
+                            <th>Status</th>
+                            <th>Aktion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Benutzer 1</td>
+                            <td>5.000,00 €</td>
+                            <td>4,5%</td>
+                            <td>Aktiv</td>
+                            <td><button class="delete-btn" onclick="deleteCredit('Benutzer 1')">Löschen</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Zinsätze speichern
+        function saveRates() {
+            const savingsRate = document.getElementById('savings-rate').value;
+            const creditRate = document.getElementById('credit-rate').value;
+
+            if (!savingsRate || !creditRate) {
+                alert('Bitte alle Felder ausfüllen');
+                return;
+            }
+
+            alert(`Zinsätze gespeichert:\nSparzins: ${savingsRate}%\nKreditzins: ${creditRate}%`);
+        }
+
+        // Benutzer löschen
+        function deleteUser(username) {
+            if (confirm(`Benutzer "${username}" wirklich löschen?`)) {
+                alert(`Benutzer "${username}" wurde gelöscht`);
+                loadUsers();
+            }
+        }
+
+        // Kredit löschen
+        function deleteCredit(username) {
+            if (confirm(`Kredit von "${username}" wirklich löschen?`)) {
+                alert(`Kredit gelöscht`);
+                loadCredits();
+            }
+        }
+
+        // Abmelden
+        function logout() {
+            if (confirm('Möchten Sie sich wirklich abmelden?')) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Beim Laden Benutzer anzeigen
+        window.onload = function() {
+            loadUsers();
+        };
+    </script>
+</body>
+</html>
