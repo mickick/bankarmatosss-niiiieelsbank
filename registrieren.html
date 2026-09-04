@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniBank - Registrieren</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        input[type="password"] {
+            letter-spacing: 2px;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .success {
+            color: #27ae60;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success.show {
+            display: block;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .link-section {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .link-section p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .link-section a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .link-section a:hover {
+            text-decoration: underline;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button-group button {
+            flex: 1;
+            margin-top: 0;
+        }
+
+        button.secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        button.secondary:hover {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-bottom: 25px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MiniBank</h1>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="username">Benutzername</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    placeholder="Benutzername eingeben"
+                    required
+                >
+                <div class="error" id="usernameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="pin">PIN</label>
+                <input 
+                    type="password" 
+                    id="pin" 
+                    placeholder="PIN eingeben"
+                    maxlength="10"
+                    required
+                >
+                <div class="hint">Mindestens 4 Ziffern</div>
+                <div class="error" id="pinError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="pinConfirm">PIN bestätigen</label>
+                <input 
+                    type="password" 
+                    id="pinConfirm" 
+                    placeholder="PIN wiederholen"
+                    maxlength="10"
+                    required
+                >
+                <div class="error" id="pinConfirmError"></div>
+            </div>
+
+            <div class="success" id="successMsg">✓ Registrierung erfolgreich!</div>
+
+            <div class="button-group">
+                <button type="button" class="secondary" id="backBtn">Zurück</button>
+                <button type="submit">Registrieren</button>
+            </div>
+        </form>
+
+        <div class="link-section">
+            <p>Bereits registriert? <a onclick="goToLogin()">Jetzt anmelden</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Initialisierung
+        const registerForm = document.getElementById('registerForm');
+        const backBtn = document.getElementById('backBtn');
+
+        // Zur Anmeldeseite navigieren
+        function goToLogin() {
+            window.location.href = 'index.html';
+        }
+
+        // Zurück-Button
+        backBtn.addEventListener('click', goToLogin);
+
+        // Form Submission
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const pin = document.getElementById('pin').value;
+            const pinConfirm = document.getElementById('pinConfirm').value;
+
+            // Validierungen zurücksetzen
+            clearErrors();
+
+            // Validierung: Benutzername
+            if (username.length < 3) {
+                showError('usernameError', 'Benutzername muss mindestens 3 Zeichen lang sein');
+                return;
+            }
+
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                showError('usernameError', 'Nur Buchstaben, Zahlen und Unterstriche erlaubt');
+                return;
+            }
+
+            // Validierung: PIN
+            if (pin.length < 4) {
+                showError('pinError', 'PIN muss mindestens 4 Ziffern lang sein');
+                return;
+            }
+
+            if (!/^\d+$/.test(pin)) {
+                showError('pinError', 'PIN darf nur Ziffern enthalten');
+                return;
+            }
+
+            // Validierung: PIN-Bestätigung
+            if (pin !== pinConfirm) {
+                showError('pinConfirmError', 'PINs stimmen nicht überein');
+                return;
+            }
+
+            // Prüfe ob Benutzername bereits existiert
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[username]) {
+                showError('usernameError', 'Dieser Benutzername existiert bereits');
+                return;
+            }
+
+            // Benutzer speichern
+            users[username] = {
+                pin: pin,
+                balance: 0,
+                createdAt: new Date().toISOString(),
+                transactions: []
+            };
+
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // Erfolg anzeigen
+            document.getElementById('successMsg').classList.add('show');
+            registerForm.style.display = 'none';
+
+            // Nach 2 Sekunden zur Anmeldeseite weiterleiten
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+        });
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error').forEach(el => {
+                el.classList.remove('show');
+                el.textContent = '';
+            });
+        }
+
+        // PIN-Eingabe auf nur Ziffern beschränken
+        document.getElementById('pin').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^\d]/g, '');
+        });
+
+        document.getElementById('pinConfirm').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^\d]/g, '');
+        });
+    </script>
+</body>
+</html>
