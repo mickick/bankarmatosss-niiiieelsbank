@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniBank - Anmelden</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .button-group button {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            color: #333;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .button-group button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .button-group button:hover {
+            border-color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        input[type="password"] {
+            letter-spacing: 2px;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .success {
+            color: #27ae60;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success.show {
+            display: block;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+
+        .admin-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .admin-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .admin-link a:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-bottom: 25px;
+            }
+
+            .button-group {
+                margin-bottom: 25px;
+            }
+
+            button[type="submit"] {
+                padding: 10px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MiniBank</h1>
+
+        <div class="button-group">
+            <button type="button" class="active" id="loginBtn" onclick="switchMode('login')">Anmelden</button>
+            <button type="button" id="registerBtn" onclick="switchMode('register')">Registrieren</button>
+            <button type="button" id="adminBtn" onclick="switchMode('admin')">Admin</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginUsername">Benutzername</label>
+                <input 
+                    type="text" 
+                    id="loginUsername" 
+                    placeholder="Benutzername eingeben"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="loginPin">PIN</label>
+                <input 
+                    type="password" 
+                    id="loginPin" 
+                    placeholder="PIN eingeben"
+                    maxlength="10"
+                    required
+                >
+                <div class="hint">Mindestens 4 Ziffern</div>
+                <div class="error" id="loginError"></div>
+            </div>
+
+            <button type="submit">Anmelden</button>
+        </form>
+
+        <!-- REGISTER FORM -->
+        <form id="registerForm" class="hidden">
+            <div class="form-group">
+                <label for="regUsername">Benutzername</label>
+                <input 
+                    type="text" 
+                    id="regUsername" 
+                    placeholder="Benutzername eingeben"
+                    required
+                >
+                <div class="error" id="regUsernameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="regPin">PIN</label>
+                <input 
+                    type="password" 
+                    id="regPin" 
+                    placeholder="PIN eingeben"
+                    maxlength="10"
+                    required
+                >
+                <div class="hint">Mindestens 4 Ziffern</div>
+                <div class="error" id="regPinError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="regPinConfirm">PIN bestätigen</label>
+                <input 
+                    type="password" 
+                    id="regPinConfirm" 
+                    placeholder="PIN wiederholen"
+                    maxlength="10"
+                    required
+                >
+                <div class="error" id="regPinConfirmError"></div>
+            </div>
+
+            <div class="success" id="registerSuccess">✓ Registrierung erfolgreich!</div>
+
+            <button type="submit">Registrieren</button>
+        </form>
+
+        <!-- ADMIN FORM -->
+        <form id="adminForm" class="hidden">
+            <div class="form-group">
+                <label for="adminUsername">Admin Benutzername</label>
+                <input 
+                    type="text" 
+                    id="adminUsername" 
+                    placeholder="Admin Benutzername"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="adminPin">Admin PIN</label>
+                <input 
+                    type="password" 
+                    id="adminPin" 
+                    placeholder="Admin PIN"
+                    maxlength="10"
+                    required
+                >
+                <div class="hint">Mindestens 4 Ziffern</div>
+                <div class="error" id="adminError"></div>
+            </div>
+
+            <button type="submit">Admin Login</button>
+        </form>
+    </div>
+
+    <script>
+        // Initialisierung
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const adminForm = document.getElementById('adminForm');
+
+        // Standard-Admin Credentials (beim ersten Start)
+        function initializeAdmin() {
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (!users['admin']) {
+                users['admin'] = {
+                    pin: '1234',
+                    balance: 0,
+                    isAdmin: true,
+                    createdAt: new Date().toISOString(),
+                    transactions: []
+                };
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+        }
+
+        initializeAdmin();
+
+        // Tab wechseln
+        function switchMode(mode) {
+            loginForm.classList.add('hidden');
+            registerForm.classList.add('hidden');
+            adminForm.classList.add('hidden');
+
+            document.getElementById('loginBtn').classList.remove('active');
+            document.getElementById('registerBtn').classList.remove('active');
+            document.getElementById('adminBtn').classList.remove('active');
+
+            if (mode === 'login') {
+                loginForm.classList.remove('hidden');
+                document.getElementById('loginBtn').classList.add('active');
+            } else if (mode === 'register') {
+                registerForm.classList.remove('hidden');
+                document.getElementById('registerBtn').classList.add('active');
+            } else if (mode === 'admin') {
+                adminForm.classList.remove('hidden');
+                document.getElementById('adminBtn').classList.add('active');
+            }
+
+            // Fehler löschen
+            document.querySelectorAll('.error').forEach(el => {
+                el.classList.remove('show');
+                el.textContent = '';
+            });
+        }
+
+        // LOGIN FORM
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('loginUsername').value.trim();
+            const pin = document.getElementById('loginPin').value;
+            const errorEl = document.getElementById('loginError');
+
+            errorEl.classList.remove('show');
+
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+
+            if (!users[username]) {
+                errorEl.textContent = 'Benutzername nicht gefunden';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            if (users[username].pin !== pin) {
+                errorEl.textContent = 'PIN ist falsch';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            // Login erfolgreich
+            localStorage.setItem('currentUser', username);
+            window.location.href = 'dashboard.html';
+        });
+
+        // REGISTER FORM
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('regUsername').value.trim();
+            const pin = document.getElementById('regPin').value;
+            const pinConfirm = document.getElementById('regPinConfirm').value;
+
+            clearRegisterErrors();
+
+            // Validierung: Benutzername
+            if (username.length < 3) {
+                showRegisterError('regUsernameError', 'Mindestens 3 Zeichen erforderlich');
+                return;
+            }
+
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                showRegisterError('regUsernameError', 'Nur Buchstaben, Zahlen und Unterstriche');
+                return;
+            }
+
+            // Validierung: PIN
+            if (pin.length < 4) {
+                showRegisterError('regPinError', 'Mindestens 4 Ziffern erforderlich');
+                return;
+            }
+
+            if (!/^\d+$/.test(pin)) {
+                showRegisterError('regPinError', 'Nur Ziffern erlaubt');
+                return;
+            }
+
+            // PIN bestätigung
+            if (pin !== pinConfirm) {
+                showRegisterError('regPinConfirmError', 'PINs stimmen nicht überein');
+                return;
+            }
+
+            // Duplikat prüfen
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[username]) {
+                showRegisterError('regUsernameError', 'Benutzername existiert bereits');
+                return;
+            }
+
+            // Benutzer speichern
+            users[username] = {
+                pin: pin,
+                balance: 0,
+                createdAt: new Date().toISOString(),
+                transactions: []
+            };
+
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // Erfolg
+            document.getElementById('registerSuccess').classList.add('show');
+            registerForm.style.opacity = '0.5';
+            registerForm.style.pointerEvents = 'none';
+
+            setTimeout(() => {
+                switchMode('login');
+                registerForm.style.opacity = '1';
+                registerForm.style.pointerEvents = 'auto';
+                document.getElementById('registerSuccess').classList.remove('show');
+                document.getElementById('loginUsername').focus();
+            }, 2000);
+        });
+
+        // ADMIN FORM
+        adminForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('adminUsername').value.trim();
+            const pin = document.getElementById('adminPin').value;
+            const errorEl = document.getElementById('adminError');
+
+            errorEl.classList.remove('show');
+
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+
+            if (!users[username] || !users[username].isAdmin) {
+                errorEl.textContent = 'Admin-Zugang verweigert';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            if (users[username].pin !== pin) {
+                errorEl.textContent = 'PIN ist falsch';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            // Admin Login erfolgreich
+            localStorage.setItem('currentUser', username);
+            window.location.href = 'admin.html';
+        });
+
+        function showRegisterError(elementId, message) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.classList.add('show');
+        }
+
+        function clearRegisterErrors() {
+            document.getElementById('regUsernameError').classList.remove('show');
+            document.getElementById('regPinError').classList.remove('show');
+            document.getElementById('regPinConfirmError').classList.remove('show');
+        }
+
+        // PIN-Input nur Ziffern
+        document.getElementById('loginPin').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^\d]/g, '');
+        });
+
+        document.getElementById('regPin').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^\d]/g, '');
+        });
+
+        document.getElementById('regPinConfirm').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^\d]/g, '');
+        });
+
+        document.getElementById('adminPin').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^\d]/g, '');
+        });
+    </script>
+</body>
+</html>
